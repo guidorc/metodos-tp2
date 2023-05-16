@@ -13,6 +13,9 @@
 using namespace std;
 
 namespace IO {
+  void writeResults(vector<eigenPair> &pairs, string file);
+  void writeEigenVectorsAsColumns(ofstream &file, vector<eigenPair> &results);
+  bool compareByEigenValue(const eigenPair & ep1, const eigenPair & ep2);
 } // namespace IO
 
 #endif //METODOS_TP2_IO_H

@@ -49,45 +49,43 @@ namespace MatrixOperator {
     return result;
   }
 
-  eigenPair power_iteration(const Matrix<double, Dynamic, Dynamic, RowMajor> &m, unsigned int iterations, double epsilon) {
-    VectorXd previousVector = VectorXd::Random(m.cols());
+  eigenPair power_iteration(const Matrix<double, Dynamic, Dynamic, RowMajor> &A, unsigned int iterations, double epsilon) {
+    VectorXd previousVector = VectorXd::Random(A.cols());
 
     for (unsigned int i = 0; i < iterations; i++) {
-      VectorXd multipliedVector = m * previousVector;
-      multipliedVector = multipliedVector / multipliedVector.norm();
-      double cos_angle = multipliedVector.transpose() * previousVector;
-      previousVector = multipliedVector;
+      VectorXd currentVector = A * previousVector;
+      currentVector = currentVector / currentVector.norm();
+      // Criterio de parada usando angulo entre los vectores
+      double cos_angle = currentVector.transpose() * previousVector;
       if ((1 - epsilon) < cos_angle && cos_angle <= 1) {
         break;
       }
+      previousVector = currentVector;
     }
 
-    eigenPair eigenPair;
+    eigenPair result;
 
-    eigenPair.eigenvalue = previousVector.transpose() * m * previousVector;
+    result.eigenvalue = previousVector.transpose() * A * previousVector;
     for (VectorXd::iterator it = previousVector.begin(); it != previousVector.end(); it++) {
-      eigenPair.eigenvector.push_back(*it);
+      result.eigenvector.push_back(*it);
     }
-    return eigenPair;
+    return result;
   }
 
-    vector<eigenPair> deflationMethod(const Matrix<double, Dynamic, Dynamic, RowMajor> &m, int iterations, double epsilon) {
-        Matrix<double, Dynamic, Dynamic, RowMajor> A = m;
-        vector<eigenPair> result;
-        double a = 0;
-        VectorXd v = VectorXd::Zero(A.rows());
-        eigenPair p;
-        for (int i = 0; i < m.rows(); i++)
-        {
-            A = A - (a * v * v.transpose());
-            p = power_iteration(A, iterations, epsilon);
-            result.push_back(p);
-            a = p.eigenvalue;
-            vector<double> ev = p.eigenvector;
-            v = Eigen::Map<Eigen::VectorXd, Eigen::Unaligned>(ev.data(), ev.size());
-            cout << "Found eigenvalue number: " << i << ".  Value: " <<  p.eigenvalue << endl;
-        }
-        return result;
+  vector<eigenPair> deflationMethod(const Matrix<double, Dynamic, Dynamic, RowMajor> &m, int iterations, double epsilon) {
+    Matrix<double, Dynamic, Dynamic, RowMajor> A = m;
+    vector<eigenPair> result;
+    double a = 0;
+    VectorXd v = VectorXd::Zero(A.rows());
+    eigenPair p;
+    for (int i = 0; i < m.rows(); i++) {
+      A = A - (a * v * v.transpose());
+      p = power_iteration(A, iterations, epsilon);
+      result.push_back(p);
+      a = p.eigenvalue;
+      vector<double> ev = p.eigenvector;
+      v = Eigen::Map<Eigen::VectorXd, Eigen::Unaligned>(ev.data(), ev.size());
     }
-} // namespace MatrixOperator
-
+    return result;
+  }
+}// namespace MatrixOperator
