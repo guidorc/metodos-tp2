@@ -17,6 +17,7 @@ using namespace Eigen;
 namespace MatrixOperator {
   SparseMatrix<double> read(string filename);
   eigenPair power_iteration(const Matrix<double, Dynamic, Dynamic, RowMajor> &X, unsigned iterations, double epsilon);
+  vector<eigenPair> deflationMethod(const Matrix<double, Dynamic, Dynamic, RowMajor> &m, int iterations, double epsilon);
 }
 
 

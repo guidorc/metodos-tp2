@@ -6,13 +6,20 @@ using namespace MatrixOperator;
 using namespace std;
 
 int main(int argc, char *argv[]) {
-  string input = "./matrices/diagonal.txt";
+  if (argc < 3) {
+    cerr << "Formato de entrada: " << argv[0]
+         << "<archivo> <iteraciones> <tolerancia>" << endl;
+    return 1;
+  }
 
-  SparseMatrix<double> M = read(input);
+  // lectura parametros:
+  string input = argv[1];
+  int iterations = atof(argv[2]);
+  double tolerance = atof(argv[3]);
 
-  eigenPair res = power_iteration(M, 10, 0.0001);
+  SparseMatrix<double> M = read("./matrices/" + input + ".txt");
 
-  cout << "prueba" << endl;
+  vector<eigenPair> res = deflationMethod(M, iterations, tolerance);
 
   return 0;
 }

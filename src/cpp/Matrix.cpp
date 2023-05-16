@@ -70,5 +70,24 @@ namespace MatrixOperator {
     }
     return eigenPair;
   }
+
+    vector<eigenPair> deflationMethod(const Matrix<double, Dynamic, Dynamic, RowMajor> &m, int iterations, double epsilon) {
+        Matrix<double, Dynamic, Dynamic, RowMajor> A = m;
+        vector<eigenPair> result;
+        double a = 0;
+        VectorXd v = VectorXd::Zero(A.rows());
+        eigenPair p;
+        for (int i = 0; i < m.rows(); i++)
+        {
+            A = A - (a * v * v.transpose());
+            p = power_iteration(A, iterations, epsilon);
+            result.push_back(p);
+            a = p.eigenvalue;
+            vector<double> ev = p.eigenvector;
+            v = Eigen::Map<Eigen::VectorXd, Eigen::Unaligned>(ev.data(), ev.size());
+            cout << "Found eigenvalue number: " << i << ".  Value: " <<  p.eigenvalue << endl;
+        }
+        return result;
+    }
 } // namespace MatrixOperator
 
