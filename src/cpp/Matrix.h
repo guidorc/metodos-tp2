@@ -5,9 +5,11 @@
 #ifndef METODOS_TP2_MATRIX_H
 #define METODOS_TP2_MATRIX_H
 
+#include <list>
+#include <vector>
+#include "Eigenpair.h"
 #include "string"
 #include "Eigen/Sparse"
-#include "Eigenpair.h"
 
 using namespace std;
 using namespace Eigen;
