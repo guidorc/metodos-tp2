@@ -1,0 +1,1 @@
+/usr/bin/c++  -ggdb -std=c++17 -Wall -Wpedantic -Wextra -Wshadow -Wpointer-arith -Wcast-qual -g CMakeFiles/metodos_tp2.dir/src/cpp/main.cpp.o CMakeFiles/metodos_tp2.dir/src/cpp/Matrix.cpp.o CMakeFiles/metodos_tp2.dir/src/cpp/Eigenpair.cpp.o CMakeFiles/metodos_tp2.dir/src/cpp/IO.cpp.o -o metodos_tp2 

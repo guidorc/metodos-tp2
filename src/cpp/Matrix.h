@@ -9,7 +9,7 @@
 #include <vector>
 #include "Eigenpair.h"
 #include "string"
-#include "Eigen/Sparse"
+#include "../Eigen/Sparse"
 
 using namespace std;
 using namespace Eigen;
