@@ -49,7 +49,7 @@ namespace MatrixOperator {
     return result;
   }
 
-  eigenPair power_iteration(const Matrix<double, Dynamic, Dynamic, RowMajor> &A, unsigned int iterations, double epsilon) {
+  eigenPair powerIteration(const Matrix<double, Dynamic, Dynamic, RowMajor> &A, unsigned int iterations, double epsilon) {
     VectorXd previousVector = VectorXd::Random(A.cols());
 
     for (unsigned int i = 0; i < iterations; i++) {
@@ -80,7 +80,7 @@ namespace MatrixOperator {
     eigenPair p;
     for (int i = 0; i < m.rows(); i++) {
       A = A - (a * v * v.transpose());
-      p = power_iteration(A, iterations, epsilon);
+      p = powerIteration(A, iterations, epsilon);
       result.push_back(p);
       a = p.eigenvalue;
       vector<double> ev = p.eigenvector;

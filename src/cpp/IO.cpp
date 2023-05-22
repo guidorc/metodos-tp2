@@ -12,11 +12,12 @@ namespace IO {
     return ep1.eigenvalue < ep2.eigenvalue;
   }
 
-  void writeEigenVectorsAsColumns(ofstream &file, vector<eigenPair> &results) {
+  void writeEigenVectors(ofstream &file, vector<eigenPair> &results) {
     vector<vector<double>> transposed(results.size());
     for (eigenPair pair: results) {
       int row = 0;
       for (double v_i: pair.eigenvector) {
+        // we save the eigenvectors as columns
         transposed[row].push_back(v_i);
         row++;
       }
@@ -56,7 +57,7 @@ namespace IO {
     // ordenar autovalores de mayor a menor
     std::sort(results.begin(), results.end(), compareByEigenValue);
 
-    // guardad autovalores
+    // guardar autovalores
     eigenValues << "eigenValues,\n";
     for (eigenPair pair: results) {
       eigenValues << pair.eigenvalue << ",\n";
@@ -64,6 +65,6 @@ namespace IO {
     eigenValues.close();
 
     // guardar autovectores
-    writeEigenVectorsAsColumns(eigenVectors, results);
+    writeEigenVectors(eigenVectors, results);
   }
 }// namespace IO
