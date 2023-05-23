@@ -1,27 +1,27 @@
 import numpy as np
-import utilidad
+import utils
+import ejecutar
+import imagenes
 
 if __name__ == '__main__':
-    matrizA = np.array([[1, 2], [3, 4]])
-    matrizB = np.array([[1, 3], [3, 6]])
-
-    matrices = []
-    matrices.append(matrizA)
-    matrices.append((matrizB))
+    # Leer caras
+    imagenes = imagenes.cargarImagenes()
     # Construir matriz de imagenes
-    for i in range(len(matrices)):
-        matrices[i] = matrices[i].flatten()
-    matrices = np.array(matrices)
+    X = []
+    for imagen in imagenes:
+        X.append(imagen.flatten())
+    X = np.array(X)
     # promedio dimension-pixel
-    muj = matrices.mean(axis=0)
+    muj = X.mean(axis=0)
     # matriz centrada
     X_c = []
-    for x_i in matrices:
+    for x_i in X:
         X_c.append(x_i - muj)
     # Matriz de covarianza
-    C = utilidad.matrizDeCovarianza(np.array(X_c))
-    print(C)
-    # Exportarla para calcular autovectores
-    utilidad.write(np.matrix(C))
+    C = utils.matrizDeCovarianza(np.array(X_c))
+    # Exportarla para calcular autovalores y autovectores
+    # utils.write(np.matrix(C), "covarianza.txt")
+    # Calcular autovalores y autovectores de matriz de covarianza
+    # ejecutar.corerTp("covarianza")
 
 

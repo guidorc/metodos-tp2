@@ -8,18 +8,18 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug"/>
+				<Option working_dir="/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="metodos_tp2">
-				<Option output="/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/metodos_tp2" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug"/>
+				<Option output="/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/metodos_tp2" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -33,15 +33,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 metodos_tp2"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 metodos_tp2"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="metodos_tp2/fast">
-				<Option output="/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/metodos_tp2" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug"/>
+				<Option output="/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/metodos_tp2" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -55,55 +55,55 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 metodos_tp2/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 metodos_tp2/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug"/>
+				<Option working_dir="/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug"/>
+				<Option working_dir="/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/victoria/Documents/Métodos/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guido/Desktop/metnum/metodos-tp2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/victoria/Documents/Métodos/metodos-tp2/src/cpp/Eigenpair.cpp">
+		<Unit filename="/home/guido/Desktop/metnum/metodos-tp2/src/cpp/Eigenpair.cpp">
 			<Option target="metodos_tp2"/>
 		</Unit>
-		<Unit filename="/home/victoria/Documents/Métodos/metodos-tp2/src/cpp/Eigenpair.h">
+		<Unit filename="/home/guido/Desktop/metnum/metodos-tp2/src/cpp/Eigenpair.h">
 			<Option target="metodos_tp2"/>
 		</Unit>
-		<Unit filename="/home/victoria/Documents/Métodos/metodos-tp2/src/cpp/IO.cpp">
+		<Unit filename="/home/guido/Desktop/metnum/metodos-tp2/src/cpp/IO.cpp">
 			<Option target="metodos_tp2"/>
 		</Unit>
-		<Unit filename="/home/victoria/Documents/Métodos/metodos-tp2/src/cpp/IO.h">
+		<Unit filename="/home/guido/Desktop/metnum/metodos-tp2/src/cpp/IO.h">
 			<Option target="metodos_tp2"/>
 		</Unit>
-		<Unit filename="/home/victoria/Documents/Métodos/metodos-tp2/src/cpp/Matrix.cpp">
+		<Unit filename="/home/guido/Desktop/metnum/metodos-tp2/src/cpp/Matrix.cpp">
 			<Option target="metodos_tp2"/>
 		</Unit>
-		<Unit filename="/home/victoria/Documents/Métodos/metodos-tp2/src/cpp/Matrix.h">
+		<Unit filename="/home/guido/Desktop/metnum/metodos-tp2/src/cpp/Matrix.h">
 			<Option target="metodos_tp2"/>
 		</Unit>
-		<Unit filename="/home/victoria/Documents/Métodos/metodos-tp2/src/cpp/main.cpp">
+		<Unit filename="/home/guido/Desktop/metnum/metodos-tp2/src/cpp/main.cpp">
 			<Option target="metodos_tp2"/>
 		</Unit>
-		<Unit filename="/home/victoria/Documents/Métodos/metodos-tp2/CMakeLists.txt">
+		<Unit filename="/home/guido/Desktop/metnum/metodos-tp2/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>
