@@ -11,3 +11,7 @@ def cargarImagenes():
         imgs.append(image)
     result = np.stack(imgs)
     return result
+
+def leerMatriz(filename):
+    matrix = open("resultados/" + filename)
+    return np.genfromtxt(matrix, delimiter=",", names=True, dtype=None, unpack=True)

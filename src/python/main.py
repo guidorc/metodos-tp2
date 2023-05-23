@@ -1,27 +1,34 @@
 import numpy as np
 import utils
 import ejecutar
-import imagenes
+import IO
 
-if __name__ == '__main__':
-    # Leer caras
-    imagenes = imagenes.cargarImagenes()
+def PCA(imagenes):
     # Construir matriz de imagenes
     X = []
     for imagen in imagenes:
         X.append(imagen.flatten())
     X = np.array(X)
-    # promedio dimension-pixel
-    muj = X.mean(axis=0)
-    # matriz centrada
-    X_c = []
-    for x_i in X:
-        X_c.append(x_i - muj)
+    # centrar matriz
+    X_c = utils.centrarMatriz(X)
     # Matriz de covarianza
+    # CONSULTAR SI ES LO MISMO HACER X^t * X o X*X^t
     C = utils.matrizDeCovarianza(np.array(X_c))
     # Exportarla para calcular autovalores y autovectores
-    # utils.write(np.matrix(C), "covarianza.txt")
+    utils.write(np.matrix(C), "covarianza.txt")
     # Calcular autovalores y autovectores de matriz de covarianza
-    # ejecutar.corerTp("covarianza")
+    ejecutar.correrTp("covarianza")
+    # Leer matriz de autovectores
+    V = IO.leerMatriz("covarianza_eigenVectors.csv")
+    Z = []
+    for i in range(len(X)):
+        Z.append(utils.proyectar(V, X[i], 2))
+    return Z
+
+if __name__ == '__main__':
+    # Leer caras
+    imagenes = IO.cargarImagenes()
+    PCA(imagenes)
+
 
 

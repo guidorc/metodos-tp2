@@ -1,33 +1,27 @@
 import numpy as np
 
+def centrarMatriz(X):
+    # promedio dimension-pixel
+    muj = X.mean(axis=0)
+    # matriz centrada
+    X_c = []
+    for x_i in X:
+        X_c.append(x_i - muj)
+    return X_c
 
-# print(np.cov(matrizA))
+
 def matrizDeCovarianza(m):
-    return np.dot(1 / (len(m) - 1), np.matmul(m.transpose(), m))
-
-
-# Matriz de m x n
-# matrizA.mean(axis=0)
-def promedioDimensionPixel(matrizX):
-    m = len(matrizX)
-    n = len(matrizX[0])
-    res = []
-    for i in range(0, n):
-        res.append(promedioDimensionPixelAux(matrizX, i))
-    return res
-
-
-# Matriz de m x n
-def promedioDimensionPixelAux(matrizX, columnaJ):
-    # Yo lo que quiero es el promedio de la columna J de X
-    m = len(matrizX)
-    res = 0
-    for fila in matrizX:
-        res += fila[columnaJ]
-    return res / m
+    return np.dot(1 / (len(m) - 1), np.matmul(m, m.transpose()))
 
 
 def write(m, filename):
     with open('matrices/' + filename, 'wb') as f:
         for line in m:
             np.savetxt(f, line, fmt='%.2f')
+
+
+def proyectar(V, x_i, k=2):
+    z_i = []
+    for i in range(k):
+        z_i.append(np.matmul(V[i], x_i))
+    return z_i
