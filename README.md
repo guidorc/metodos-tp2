@@ -9,3 +9,9 @@ Parámetros:
 - Nombre del archivo de texto a ejecutar desde el directorio `/matrices`
 - Nro de iteraciones para método de la potencia
 - Tolerancia para convergencia del método de la potencia
+
+Ejecucion:
+
+  - Buildear: `cmake CMakeLists.txt`
+  - Compilar: `make`
+  - Ejecutar: `./tp2 <archivo> <#iteraciones> <tolerancia>` 
