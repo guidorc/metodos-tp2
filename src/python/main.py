@@ -3,7 +3,7 @@ import utils
 import ejecutar
 import IO
 
-def PCA(imagenes):
+def PCA(imagenes, calcularCovarianza = False):
     # Construir matriz de imagenes
     X = []
     for imagen in imagenes:
@@ -11,16 +11,18 @@ def PCA(imagenes):
     X = np.array(X)
     # centrar matriz
     X_c = utils.centrarMatriz(X)
-    # Matriz de covarianza
-    # CONSULTAR SI ES LO MISMO HACER X^t * X o X*X^t
-    C = utils.matrizDeCovarianza(np.array(X_c))
-    # Exportarla para calcular autovalores y autovectores
-    utils.write(np.matrix(C), "covarianza.txt")
-    # Calcular autovalores y autovectores de matriz de covarianza
-    ejecutar.correrTp("covarianza")
+    if calcularCovarianza:
+        # Matriz de covarianza
+        # CONSULTAR SI ES LO MISMO HACER X^t * X o X*X^t
+        C = utils.matrizDeCovarianza(np.array(X_c))
+        # Exportarla para calcular autovalores y autovectores
+        utils.write(np.matrix(C), "covarianza.txt")
+        # Calcular autovalores y autovectores de matriz de covarianza
+        ejecutar.correrTp("covarianza")
     # Leer matriz de autovectores
     V = IO.leerMatriz("covarianza_eigenVectors.csv")
     Z = []
+    X = np.transpose(X)
     for i in range(len(X)):
         Z.append(utils.proyectar(V, X[i], 2))
     return Z

@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
   double tolerance = atof(argv[3]);
 
   // Lectura de matriz
-  SparseMatrix<double> M = read("./matrices/" + input + ".txt");
+  MatrixXd M = read("./matrices/" + input + ".txt");
 
   // Calculo de autovalores y autovectores
   vector<eigenPair> res = deflationMethod(M, iterations, tolerance);

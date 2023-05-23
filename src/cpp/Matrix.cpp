@@ -24,7 +24,45 @@ list<string> split(string originalString, char delim) {
 }
 
 namespace MatrixOperator {
-  SparseMatrix<double> read(string filename) {
+  MatrixXd read(string filename) {
+    int cols = 0, rows = 0;
+    double buff[MAXBUFSIZE];
+
+    // Read numbers from file into buffer.
+    ifstream infile;
+    infile.open(filename);
+    while (!infile.eof()) {
+      string line;
+      getline(infile, line);
+
+      int temp_cols = 0;
+      stringstream stream(line);
+      while(!stream.eof())
+        stream >> buff[cols*rows+temp_cols++];
+
+      if (temp_cols == 0)
+        continue;
+
+      if (cols == 0)
+        cols = temp_cols;
+
+      rows++;
+    }
+
+    infile.close();
+
+    rows--;
+
+    // Populate matrix with numbers.
+    MatrixXd result(rows,cols);
+    for (int i = 0; i < rows; i++)
+      for (int j = 0; j < cols; j++)
+        result(i,j) = buff[ cols*i+j ];
+
+    return result;
+  }
+  /*
+  Matrix<double , Dynamic, Dynamic, RowMajor> read(string filename) {
     ifstream file(filename.c_str());
     vector<vector<double>> res;
     string line, temp;
@@ -48,8 +86,9 @@ namespace MatrixOperator {
     result.setFromTriplets(inputReader.begin(), inputReader.end());
     return result;
   }
+   */
 
-  eigenPair powerIteration(const Matrix<double, Dynamic, Dynamic, RowMajor> &A, unsigned int iterations, double epsilon) {
+  eigenPair powerIteration(const MatrixXd &A, unsigned int iterations, double epsilon) {
     VectorXd previousVector = VectorXd::Random(A.cols());
 
     for (unsigned int i = 0; i < iterations; i++) {
@@ -72,14 +111,15 @@ namespace MatrixOperator {
     return result;
   }
 
-  vector<eigenPair> deflationMethod(const Matrix<double, Dynamic, Dynamic, RowMajor> &m, int iterations, double epsilon) {
-    Matrix<double, Dynamic, Dynamic, RowMajor> A = m;
+  vector<eigenPair> deflationMethod(const MatrixXd &m, int iterations, double epsilon) {
+    MatrixXd A = m;
     vector<eigenPair> result;
     double a = 0;
     VectorXd v = VectorXd::Zero(A.rows());
     eigenPair p;
     for (int i = 0; i < m.rows(); i++) {
-      A = A - (a * v * v.transpose());
+      MatrixXd sub = (a * v * v.transpose());
+      A = A - sub;
       p = powerIteration(A, iterations, epsilon);
       result.push_back(p);
       a = p.eigenvalue;
