@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 project(metodos_tp2)
 set(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -std=c++17 -Wall -Wpedantic -Wextra -Wshadow -Wpointer-arith -Wcast-qual")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -std=c++17 -O3 -Wall -Wpedantic -Wextra -Wshadow -Wpointer-arith -Wcast-qual")
 set(SOURCE_FILES src/cpp/Matrix.cpp src/cpp/Eigenpair.cpp src/cpp/IO.cpp)
 add_executable(tp2 ${SOURCE_FILES} src/cpp/main.cpp)

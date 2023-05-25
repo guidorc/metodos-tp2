@@ -5,9 +5,9 @@ from pathlib import Path
 def cargarImagenes():
     paths = []
     imgs = []
-    for path in sorted(list(Path('matrices/caras').rglob('*/*.pgm'))):
+    for path in sorted(list(Path('matrices/caras/s1').rglob('*.pgm'))):
         paths.append(path)
-        image = (plt.imread(path)/255)
+        image = (plt.imread(path)[::2, ::2]/255)
         imgs.append(image)
     result = np.stack(imgs)
     return result

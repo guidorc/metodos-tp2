@@ -24,6 +24,7 @@ list<string> split(string originalString, char delim) {
 }
 
 namespace MatrixOperator {
+  /*
   MatrixXd read(string filename) {
     int cols = 0, rows = 0;
     double buff[MAXBUFSIZE];
@@ -61,7 +62,7 @@ namespace MatrixOperator {
 
     return result;
   }
-  /*
+  */
   Matrix<double , Dynamic, Dynamic, RowMajor> read(string filename) {
     ifstream file(filename.c_str());
     vector<vector<double>> res;
@@ -86,9 +87,8 @@ namespace MatrixOperator {
     result.setFromTriplets(inputReader.begin(), inputReader.end());
     return result;
   }
-   */
 
-  eigenPair powerIteration(const MatrixXd &A, unsigned int iterations, double epsilon) {
+  eigenPair powerIteration(const Matrix<double , Dynamic, Dynamic, RowMajor> &A, unsigned int iterations, double epsilon) {
     VectorXd previousVector = VectorXd::Random(A.cols());
 
     for (unsigned int i = 0; i < iterations; i++) {
@@ -111,14 +111,15 @@ namespace MatrixOperator {
     return result;
   }
 
-  vector<eigenPair> deflationMethod(const MatrixXd &m, int iterations, double epsilon) {
-    MatrixXd A = m;
+  vector<eigenPair> deflationMethod(const Matrix<double , Dynamic, Dynamic, RowMajor> &m, int iterations, double epsilon) {
+    Matrix<double , Dynamic, Dynamic, RowMajor> A = m;
     vector<eigenPair> result;
     double a = 0;
     VectorXd v = VectorXd::Zero(A.rows());
     eigenPair p;
     for (int i = 0; i < m.rows(); i++) {
-      MatrixXd sub = (a * v * v.transpose());
+      cout << "calculating eigenvalue: " << to_string(i) << endl;
+      Matrix<double , Dynamic, Dynamic, RowMajor> sub = (a * v * v.transpose());
       A = A - sub;
       p = powerIteration(A, iterations, epsilon);
       result.push_back(p);

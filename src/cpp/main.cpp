@@ -20,7 +20,8 @@ int main(int argc, char *argv[]) {
   double tolerance = atof(argv[3]);
 
   // Lectura de matriz
-  MatrixXd M = read("./matrices/" + input + ".txt");
+  string filename = "./matrices/" + input + ".txt";
+  Matrix<double , Dynamic, Dynamic, RowMajor> M = read(filename);
 
   // Calculo de autovalores y autovectores
   vector<eigenPair> res = deflationMethod(M, iterations, tolerance);
