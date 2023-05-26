@@ -24,7 +24,7 @@ def write(m, filename):
 def proyectar(V, x_i, k):
     z_i = []
     for i in range(k):
-        z_i.append(np.matmul(V[i], x_i))
+        z_i.append(np.matmul(np.transpose(V[i]), x_i))
     return z_i
 
 def reconstruirImagen(z_x, V, k):
@@ -34,13 +34,19 @@ def reconstruirImagen(z_x, V, k):
     return x
 
 def imagenPromedio(imagenes):
-    return imagenes[0]
+    P = np.zeros(np.shape(imagenes[0]))
+    for i in range(len(imagenes)):
+        m_i = imagenes[i]
+        P += m_i
+    return np.dot(1 / (len(imagenes)), P)
 
 def imageCovarianceMatrix(imagenes):
     n = len(imagenes)
     P = imagenPromedio(imagenes)
-    G = []
-    for i in range(len(imagenes)):
+    # inicializar G con 0s
+    rows, cols = np.shape(imagenes[0])
+    G = np.zeros((cols, cols))
+    for i in range(n):
         A_i = imagenes[i]
         X = A_i - P
         G += np.matmul(np.transpose(X), X)
