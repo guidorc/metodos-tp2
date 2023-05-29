@@ -27,10 +27,11 @@ def proyectar(V, x_i, k):
         z_i.append(np.matmul(np.transpose(V[i]), x_i))
     return z_i
 
-def reconstruirImagen(z_x, V, k):
-    x = [z_x]
+def reconstruirImagen(x, V, k):
+    z_x = np.matmul(np.transpose(V), x)
+    x = np.dot(z_x[0], V[0])
     for i in range(1, k):
-       x += np.matmul(z_x[i], V[i])
+        x += np.dot(z_x[i], V[i])
     return x
 
 def imagenPromedio(imagenes):

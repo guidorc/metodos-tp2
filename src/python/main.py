@@ -29,11 +29,11 @@ def PCA(imagenes, k, calcularCovarianza = False):
     for i in range(len(X)):
         Z.append(utils.proyectar(V, X[i], k))
     # Reconstruir imagenes
-    # res = []
-    # for i in range(len(X)):
-    #    res.append(utils.reconstruirImagen(Z[i], V, k))
-    #    utils.plotImage(res[i])
-    # return res
+    res = []
+    for i in range(len(X)):
+        res.append(utils.reconstruirImagen(X[i], V, k))
+        utils.plotImage(res[i])
+        return res
 
 
 def TDPCA(imagenes, k, calcularAutovectores):
@@ -63,9 +63,8 @@ def TDPCA(imagenes, k, calcularAutovectores):
 if __name__ == '__main__':
     # Leer caras
     imagenes = IO.cargarImagenes()
-    # PCA(imagenes, 100, False)
-    TDPCA(imagenes, 10, False)
+
+    PCA(imagenes, 100, False)
+    # IO.imprimirImagenes(imagenes)
+    # TDPCA(imagenes, 10, False)
     # plotter.graficarAutovalores("covarianza_eigenValues.csv")
-
-
-# Este comentario es para ver si puedo pushear cosas.
