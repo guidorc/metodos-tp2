@@ -68,4 +68,4 @@ if __name__ == '__main__':
     # plotter.graficarAutovalores("covarianza_eigenValues.csv")
 
 
-
+# Este comentario es para ver si puedo pushear cosas.
