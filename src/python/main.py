@@ -2,7 +2,6 @@ import numpy as np
 import utils
 import ejecutar
 import IO
-import plotter
 
 def PCA(imagenes, k, calcularCovarianza = False):
     # Aplanar imagenes
@@ -22,19 +21,26 @@ def PCA(imagenes, k, calcularCovarianza = False):
         # Calcular autovalores y autovectores de matriz de covarianza
         print("Ejecutando Deflacion para Matriz de Covarianza")
         ejecutar.correrTp("covarianza")
-    # Leer matriz de autovectores
-    V = IO.leerMatriz("covarianza_eigenVectors.csv")
+    return X
+    return
     # Proyectar imagenes
+
+    # Reconstruir imagenes
+
+
+def proyectarPCA(V, X, k):
     Z = []
     for i in range(len(X)):
         Z.append(utils.proyectar(V, X[i], k))
-    # Reconstruir imagenes
-    res = []
-    for i in range(len(X)):
-        res.append(utils.reconstruirImagen(X[i], V, k))
-        utils.plotImage(res[i])
-        return res
+    return Z
 
+def reconstruirPCA(V, X, k, h, w):
+
+    imagenes_reconstruidas = []
+    for i in range(len(X)):
+        imagenes_reconstruidas.append(utils.reconstruirImagen(X[i], V, k))
+
+    IO.imprimirImagenes(utils.formatearImagenes(imagenes_reconstruidas, h, w))
 
 def TDPCA(imagenes, k, calcularAutovectores):
     # Calculo image covariance matrix
@@ -64,7 +70,16 @@ if __name__ == '__main__':
     # Leer caras
     imagenes = IO.cargarImagenes()
 
-    PCA(imagenes, 100, False)
-    # IO.imprimirImagenes(imagenes)
+    # -------- PCA -------- #
+    # Obtener componentes principales
+    X = PCA(imagenes, 1000, False)
+    V = IO.leerMatriz("covarianza_eigenVectors.csv")
+    # Obtener proyeccion de menor dimension
+    Z = proyectarPCA(V, X, 100)
+    # Reconstruir imagenes
+    _, h, w = imagenes.shape
+    reconstruirPCA(V, X, 100, h, w)
+
+    # -------- 2DPCA -------- #
     # TDPCA(imagenes, 10, False)
     # plotter.graficarAutovalores("covarianza_eigenValues.csv")

@@ -34,6 +34,13 @@ def reconstruirImagen(x, V, k):
         x += np.dot(z_x[i], V[i])
     return x
 
+def formatearImagenes(imagenes, h, w):
+    # imagenes viene aplanada
+    res = []
+    for imagen in imagenes:
+        imagen_formateada = np.reshape(imagen, (h, w))
+        res.append(imagen_formateada)
+    return np.array(res)
 def imagenPromedio(imagenes):
     P = np.zeros(np.shape(imagenes[0]))
     for i in range(len(imagenes)):
