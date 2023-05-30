@@ -1,6 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def write(m, filename):
+    with open('matrices/' + filename, 'wb') as f:
+        for line in m:
+            np.savetxt(f, line, fmt='%.6f')
+
+
 def centrarMatriz(X):
     # promedio dimension-pixel
     muj = X.mean(axis=0)
@@ -15,10 +21,11 @@ def matrizDeCovarianza(m):
     return np.dot(1 / (len(m) - 1), np.matmul(m.transpose(), m))
 
 
-def write(m, filename):
-    with open('matrices/' + filename, 'wb') as f:
-        for line in m:
-            np.savetxt(f, line, fmt='%.6f')
+def aplanarImagenes(imagenes):
+    X = []
+    for imagen in imagenes:
+        X.append(imagen.flatten())
+    return np.array(X)
 
 
 def proyectar(V, x_i, k):
@@ -59,7 +66,3 @@ def imageCovarianceMatrix(imagenes):
         X = A_i - P
         G += np.matmul(np.transpose(X), X)
     return np.dot(1/n, G)
-
-def plotImage(image):
-    plt.imshow(image, cmap='gray')
-
