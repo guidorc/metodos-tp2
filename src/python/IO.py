@@ -13,7 +13,14 @@ def cargarImagenes():
     result = np.stack(imgs)
     return result
 
-def leerMatriz(filename):
-    matrix = open("resultados/" + filename)
+def leerMatriz(path, filename):
+    matrix = open(path + filename)
     # return pd.read_csv(matrix, delimiter=",", dtype=None).T.values[:-1]
     return np.genfromtxt(matrix, delimiter=",", names=True, dtype=None, unpack=True)[:-1]
+
+def leerMatrizCorrelacion(path, filename):
+    matrix = open(path + filename)
+    # return pd.read_csv(matrix, delimiter=",", dtype=None).T.values[:-1]
+    input = np.loadtxt(matrix, dtype='i', delimiter=' ')
+    return input
+    # return np.genfromtxt(matrix, delimiter=" ", names=True, dtype=None, unpack=True)

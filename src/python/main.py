@@ -4,18 +4,22 @@ import ejecutar
 import IO
 import plotter
 
-def obtenerMatrizCovarianza(X):
+def obtenerMatricesCovarianzayCorrelación(X):
     # centrar matriz
     X_c = utils.centrarMatriz(X)
     # Matriz de covarianza
     print("Calculando Matriz de Covarianza")
     C = utils.matrizDeCovarianza(np.array(X_c))
+    print("Calculando Matriz de Correlación")
+    R = utils.matrizDeCorrelación(C)
     # Exportarla para calcular autovalores y autovectores
     print("Escribiendo Matriz de Covarianza")
     utils.write(np.matrix(C), "covarianza.txt")
+    print("Escribiendo Matriz de Correlación")
+    utils.write(np.matrix(R), "correlacion.txt")
     # Calcular autovalores y autovectores de matriz de covarianza
     print("Ejecutando Deflacion para Matriz de Covarianza")
-    ejecutar.correrTp("covarianza")
+    # ejecutar.correrTp("covarianza")
 
 
 def proyectarPCA(V, X, k):
@@ -37,8 +41,8 @@ def PCA(imagenes, k, calcularCovarianza = False):
     X = utils.aplanarImagenes(imagenes)
     # Obtener componentes principales
     if calcularCovarianza:
-        obtenerMatrizCovarianza(X)
-    V = IO.leerMatriz("covarianza_eigenVectors.csv")
+        obtenerMatricesCovarianzayCorrelación(X)
+    V = IO.leerMatriz("resultados/", "covarianza_eigenVectors.csv")
     # Obtener proyeccion de menor dimension
     Z = proyectarPCA(V, X, k)
     # Reconstruir imagenes
@@ -94,10 +98,12 @@ if __name__ == '__main__':
     imagenes = IO.cargarImagenes()
 
     # -------- PCA -------- #
-    PCA(imagenes, 100)
+    # PCA(imagenes, 100, True)
 
     # -------- 2DPCA -------- #
-    TDPCA(imagenes, 10, False)
+    # TDPCA(imagenes, 10, False)
 
     # -------- EXPERIMENTACION -------- #
-    plotter.graficarAutovalores("covarianza_eigenValues.csv")
+    # plotter.graficarAutovalores("covarianza_eigenValues.csv")
+    plotter.graficarCorrelacion("correlacion.txt")
+

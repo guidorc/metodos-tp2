@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -20,6 +22,15 @@ def centrarMatriz(X):
 def matrizDeCovarianza(m):
     return np.dot(1 / (len(m) - 1), np.matmul(m.transpose(), m))
 
+def matrizDeCorrelación(C):
+    # print(C.shape) (2576, 2576)
+    rows, cols = C.shape
+    R = np.zeros((rows, cols))
+
+    for i in range(cols):
+        for j in range(cols):
+            R[i][j] = C[i][j] / (math.sqrt(C[i][i]*C[j][j]))
+    return R
 
 def aplanarImagenes(imagenes):
     X = []
