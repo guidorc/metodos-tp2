@@ -1,12 +1,5 @@
 import math
-
 import numpy as np
-import matplotlib.pyplot as plt
-
-def write(m, filename):
-    with open('matrices/' + filename, 'wb') as f:
-        for line in m:
-            np.savetxt(f, line, fmt='%.6f')
 
 
 def centrarMatriz(X):
@@ -18,12 +11,10 @@ def centrarMatriz(X):
         X_c.append(x_i - muj)
     return X_c
 
-
 def matrizDeCovarianza(m):
     return np.dot(1 / (len(m) - 1), np.matmul(m.transpose(), m))
 
 def matrizDeCorrelación(C):
-    # print(C.shape) (2576, 2576)
     rows, cols = C.shape
     R = np.zeros((rows, cols))
 
@@ -31,6 +22,13 @@ def matrizDeCorrelación(C):
         for j in range(cols):
             R[i][j] = C[i][j] / (math.sqrt(C[i][i]*C[j][j]))
     return R
+
+def matrizDeCovarianza(X):
+    # centrar matriz
+    X_c = centrarMatriz(X)
+    # Matriz de covarianza
+    C = matrizDeCovarianza(np.array(X_c))
+    return C
 
 def aplanarImagenes(imagenes):
     X = []
@@ -77,3 +75,13 @@ def imageCovarianceMatrix(imagenes):
         X = A_i - P
         G += np.matmul(np.transpose(X), X)
     return np.dot(1/n, G)
+
+
+def matrizDeCorrelacionTDPCA(C):
+    rows, cols = C.shape
+    R = np.zeros((rows, cols))
+
+    for i in range(cols):
+        for j in range(cols):
+            R[i][j] = C[i][j] / (math.sqrt(C[i][i]*C[j][j]))
+    return R

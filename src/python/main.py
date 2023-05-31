@@ -4,22 +4,17 @@ import ejecutar
 import IO
 import plotter
 
-def obtenerMatricesCovarianzayCorrelación(X):
-    # centrar matriz
-    X_c = utils.centrarMatriz(X)
+def obtenerMatricesCovarianzayCorrelación(X, sufijo = ''):
     # Matriz de covarianza
     print("Calculando Matriz de Covarianza")
-    C = utils.matrizDeCovarianza(np.array(X_c))
+    C = utils.matrizDeCovarianza(X)
     print("Calculando Matriz de Correlación")
     R = utils.matrizDeCorrelación(C)
     # Exportarla para calcular autovalores y autovectores
     print("Escribiendo Matriz de Covarianza")
-    utils.write(np.matrix(C), "covarianza.txt")
+    IO.write(np.matrix(C), "covarianza" + sufijo + ".txt")
     print("Escribiendo Matriz de Correlación")
-    utils.write(np.matrix(R), "correlacion.txt")
-    # Calcular autovalores y autovectores de matriz de covarianza
-    print("Ejecutando Deflacion para Matriz de Covarianza")
-    # ejecutar.correrTp("covarianza")
+    IO.write(np.matrix(R), "correlacion" + sufijo + ".txt")
 
 
 def proyectarPCA(V, X, k):
@@ -33,7 +28,7 @@ def reconstruirPCA(V, X, k, h, w):
     for i in range(len(X)):
         imagenes_reconstruidas.append(utils.reconstruirImagen(X[i], V, k))
     imagenes_formateadas = utils.formatearImagenes(imagenes_reconstruidas, h, w)
-    plotter.imprimirImagenes(imagenes_formateadas)
+    return imagenes_formateadas
 
 
 def PCA(imagenes, k, calcularCovarianza = False):
@@ -42,12 +37,15 @@ def PCA(imagenes, k, calcularCovarianza = False):
     # Obtener componentes principales
     if calcularCovarianza:
         obtenerMatricesCovarianzayCorrelación(X)
+        # Calcular autovalores y autovectores de matriz de covarianza
+        print("Ejecutando Deflacion para Matriz de Covarianza")
+        ejecutar.correrTp("covarianza")
     V = IO.leerMatriz("resultados/", "covarianza_eigenVectors.csv")
     # Obtener proyeccion de menor dimension
     Z = proyectarPCA(V, X, k)
     # Reconstruir imagenes
     _, h, w = imagenes.shape
-    reconstruirPCA(V, X, k, h, w)
+    return reconstruirPCA(V, X, k, h, w), Z
 
 
 def proyectarTDPCA(Y, k):
@@ -68,22 +66,27 @@ def reconstruirTDPCA(M, U, k):
             x_i = U_t[i]
             A += np.outer(y_i, x_i)
         imagenes_reconstruidas.append(A)
-    plotter.imprimirImagenes(np.array(imagenes_reconstruidas))
+    for i, imagen in enumerate(imagenes_reconstruidas):
+        IO.write(imagen, str(i) + '.pgm', 'resultados/caras/s1')
+    return np.array(imagenes_reconstruidas)
 
-def TDPCA(imagenes, k, calcularAutovectores):
+def TDPCA(imagenes, k, calcularAutovectores=False):
     # Calculo image covariance matrix
     G = utils.imageCovarianceMatrix(imagenes)
+    # Calculo matriz de correlacion
+    R = utils.matrizDeCorrelacionTDPCA(G)
     # Calculo base de autovectores
     if calcularAutovectores:
         # Calcular autovectores de G
-        utils.write(np.matrix(G), "covarianza_2dpca.txt")
+        IO.write(np.matrix(G), "covarianza_2dpca.txt")
+        IO.write(np.matrix(G), "correlacion_2dpca.txt")
         ejecutar.correrTp("covarianza_2dpca")
-    U = IO.leerMatriz("covarianza_2dpca_eigenVectors.csv")
+    U = IO.leerMatriz("resultados/", "covarianza_2dpca_eigenVectors.csv")
     # Calcular feature vectors
-    feature_matrix = [] # de n x a x b
+    feature_matrix = []  # de n x a x b
     for _, A in enumerate(imagenes):
         # Calculo matriz de feature vectors para A de a x b
-        Y = [] # Y de a x b
+        Y = []  # Y de a x b
         for i in range(len(U)):
             Y.append(np.matmul(A, U[i]))
         feature_matrix.append(Y)
@@ -91,19 +94,24 @@ def TDPCA(imagenes, k, calcularAutovectores):
     for imagen in feature_matrix:
         proyectarTDPCA(imagen, k)
     # Reconstruir imagenes
-    reconstruirTDPCA(feature_matrix, U, k)
+    return reconstruirTDPCA(feature_matrix, U, k), feature_matrix[:k]
+
 
 if __name__ == '__main__':
     # Leer caras
     imagenes = IO.cargarImagenes()
 
     # -------- PCA -------- #
-    # PCA(imagenes, 100, True)
+    imagenes_pca, z_pca = PCA(imagenes, 100, False)
+    # obtenerMatricesCovarianzayCorrelación(z_pca, "_pca")
+    # plotter.imprimirImagenes(imagenes_pca)
 
     # -------- 2DPCA -------- #
-    # TDPCA(imagenes, 10, False)
+    imagenes_tdpca, z_tdpca = TDPCA(imagenes, 10, False)
+    # obtenerMatricesCovarianzayCorrelación(z_tdpca, "_tdpca")
+    # plotter.imprimirImagenes(imagenes_tdpca)
 
     # -------- EXPERIMENTACION -------- #
     # plotter.graficarAutovalores("covarianza_eigenValues.csv")
-    plotter.graficarCorrelacion("correlacion.txt")
+    # plotter.graficarCorrelacion("correlacion.txt")
 

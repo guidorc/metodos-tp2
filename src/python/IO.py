@@ -3,6 +3,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+
+def write(m, filename, path='matrices/'):
+    with open(path + filename, 'wb') as f:
+        for line in m:
+            np.savetxt(f, line, fmt='%.6f')
+
+
 def cargarImagenes():
     paths = []
     imgs = []
