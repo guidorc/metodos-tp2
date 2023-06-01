@@ -3,6 +3,7 @@ import utils
 import ejecutar
 import IO
 import plotter
+import config
 
 def obtenerMatricesCovarianzayCorrelación(X, sufijo = ''):
     # Matriz de covarianza
@@ -20,8 +21,9 @@ def obtenerMatricesCovarianzayCorrelación(X, sufijo = ''):
 def proyectarPCA(V, X, k):
     Z = []
     for i in range(len(X)):
-        Z.append(utils.proyectar(V, X[i], k))
-    return Z
+        z_i = utils.proyectar(V, X[i], k)
+        Z.append(z_i)
+    return np.array(Z)
 
 def reconstruirPCA(V, X, k, h, w):
     imagenes_reconstruidas = []
@@ -46,12 +48,6 @@ def PCA(imagenes, k, calcularCovarianza = False):
     # Reconstruir imagenes
     _, h, w = imagenes.shape
     return reconstruirPCA(V, X, k, h, w), Z
-
-
-def proyectarTDPCA(Y, k):
-    # Y de a x b
-    Z = Y[:k]
-    return Z
 
 
 def reconstruirTDPCA(M, U, k):
@@ -91,24 +87,28 @@ def TDPCA(imagenes, k, calcularAutovectores=False):
             Y.append(np.matmul(A, U[i]))
         feature_matrix.append(Y)
     # Obtener proyeccion de menor dimension
+    Z = []
     for imagen in feature_matrix:
-        proyectarTDPCA(imagen, k)
+        Z.append(imagen[:k])
     # Reconstruir imagenes
-    return reconstruirTDPCA(feature_matrix, U, k), feature_matrix[:k]
+    return reconstruirTDPCA(feature_matrix, U, k), np.array(Z[:k])
 
 
 if __name__ == '__main__':
     # Leer caras
     imagenes = IO.cargarImagenes()
+    k_pca = config.k_pca
+    k_2dpca = config.k_2dpca
 
     # -------- PCA -------- #
-    imagenes_pca, z_pca = PCA(imagenes, 100, False)
-    # obtenerMatricesCovarianzayCorrelación(z_pca, "_pca")
+    # imagenes_pca, z_pca = PCA(imagenes, k_pca, False)
+    # obtenerMatricesCovarianzayCorrelación(z_pca, "_pca_" + str(k_pca))
     # plotter.imprimirImagenes(imagenes_pca)
 
     # -------- 2DPCA -------- #
-    imagenes_tdpca, z_tdpca = TDPCA(imagenes, 10, False)
-    # obtenerMatricesCovarianzayCorrelación(z_tdpca, "_tdpca")
+    imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, False)
+    z_aplanada = utils.aplanarImagenes(z_tdpca)
+    obtenerMatricesCovarianzayCorrelación(z_aplanada, "_tdpca_" + str(k_2dpca))
     # plotter.imprimirImagenes(imagenes_tdpca)
 
     # -------- EXPERIMENTACION -------- #
