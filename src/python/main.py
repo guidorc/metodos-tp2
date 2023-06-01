@@ -17,7 +17,6 @@ def obtenerMatricesCovarianzayCorrelación(X, sufijo = ''):
     print("Escribiendo Matriz de Correlación")
     IO.write(np.matrix(R), "correlacion" + sufijo + ".txt")
 
-
 def proyectarPCA(V, X, k):
     Z = []
     for i in range(len(X)):
@@ -106,12 +105,14 @@ if __name__ == '__main__':
     # plotter.imprimirImagenes(imagenes_pca)
 
     # -------- 2DPCA -------- #
-    imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, False)
-    z_aplanada = utils.aplanarImagenes(z_tdpca)
-    obtenerMatricesCovarianzayCorrelación(z_aplanada, "_tdpca_" + str(k_2dpca))
+    # imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, False)
+    # z_aplanada = utils.aplanarImagenes(z_tdpca)
+    # obtenerMatricesCovarianzayCorrelación(z_aplanada, "_tdpca_" + str(k_2dpca))
     # plotter.imprimirImagenes(imagenes_tdpca)
 
     # -------- EXPERIMENTACION -------- #
     # plotter.graficarAutovalores("covarianza_eigenValues.csv")
-    # plotter.graficarCorrelacion("correlacion.txt")
+    data, labels = plotter.leerMatrices()
+    # plotter.graficarCorrelacion(data, labels)
+    # plotter.graficarMetricasSimiliaridad(data, labels)
 
