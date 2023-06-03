@@ -39,14 +39,15 @@ def aplanarImagenes(imagenes):
 def proyectar(V, x_i, k):
     z_i = []
     for i in range(k):
-        z_i.append(np.dot(V[:,i], x_i))
+        V_i = V[i]
+        z_i.append(np.dot(V_i, x_i))
     return np.array(z_i)
 
 def reconstruirImagen(z, V, k):
     # z_x = np.matmul(np.transpose(V), z)
-    x = (z[0]*V[:,0])
+    x = (z[0]*V[0])
     for i in range(1, k):
-        x += (z[i]*V[:,i])
+        x += (z[i]*V[i])
     return x
 
 def formatearImagenes(imagenes, h, w):

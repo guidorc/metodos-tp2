@@ -44,15 +44,15 @@ def PCA(imagenes, k, calcularCovarianza = False):
         C = obtenerMatricesCovarianzayCorrelación(X)
         # Calcular autovalores y autovectores de matriz de covarianza
         print("Ejecutando Deflacion para Matriz de Covarianza")
-        # ejecutar.correrTp("covarianza")
+        ejecutar.correrTp("covarianza", k)
         # correr con numpy para comparar
-        w, V_np = np.linalg.eigh(C)
-        i = 0
+        # w, V_np = np.linalg.eigh(C)
+        # i = 0
         # reordenar autovalores y autovectores
-        while i < len(w)-1-i:
-            w[i], w[len(w)-1-i] = w[len(w)-1-i], w[i]
-            V_np[i], V_np[len(w)-1-i] = V_np[len(w)-1-i], V_np[i]
-    V = np.array(IO.leerMatriz("resultados/", "covarianza_eigenVectors.csv"))
+        # while i < len(w)-1-i:
+        #    w[i], w[len(w)-1-i] = w[len(w)-1-i], w[i]
+        #    V_np[i], V_np[len(w)-1-i] = V_np[len(w)-1-i], V_np[i]
+    V = np.array(IO.leerMatriz("resultados/", "covarianza_eigenVectors.csv", k))
     # Obtener proyeccion de menor dimension
     Z = proyectarPCA(V, X, k)
     # Reconstruir imagenes
@@ -63,13 +63,13 @@ def PCA(imagenes, k, calcularCovarianza = False):
 def reconstruirTDPCA(M, U, k):
     h = len(M[0][0])
     w = len(U[0])
-    U_t = np.transpose(U)
+    # U_t = np.transpose(U)
     imagenes_reconstruidas = []
     for Y in M:
         A = np.zeros((h, w))
         for i in range(k):
             y_i = Y[i]
-            x_i = U_t[i]
+            x_i = U[i]
             A += np.outer(y_i, x_i)
         imagenes_reconstruidas.append(A)
     for i, imagen in enumerate(imagenes_reconstruidas):
@@ -83,21 +83,22 @@ def TDPCA(imagenes, k, calcularAutovectores=False):
     R = utils.matrizDeCorrelación(G)
     # Calculo base de autovectores
     U_np = []
+    W = []
     if calcularAutovectores:
         # Calcular autovectores de G
         IO.write(np.matrix(G), "covarianza_2dpca.txt")
         IO.write(np.matrix(R), "correlacion_2dpca.txt")
-        # ejecutar.correrTp("covarianza_2dpca")
-        _, U_np = np.linalg.eigh(G)
-    U = U_np # U = [X_1, ..., X_n]
-    # U = IO.leerMatriz("resultados/", "covarianza_2dpca_eigenVectors.csv")
+        ejecutar.correrTp("covarianza_2dpca")
+        # _, U_np = np.linalg.eigh(G)
+    # U = np.flip(U_np) # U = [X_1, ..., X_n]
+    U = IO.leerMatriz("resultados/", "covarianza_2dpca_eigenVectors.csv")
     # Calcular feature vectors
     feature_matrix = []  # de n x a x b
     for _, A in enumerate(imagenes):
         # Calculo matriz de feature vectors para A de a x b
         Y = []  # Y de a x b
         for i in range(len(U)):
-            X_i = U[:,i]
+            X_i = U[i]
             Y.append(np.matmul(A, X_i))
         feature_matrix.append(Y)
     # Obtener proyeccion de menor dimension
@@ -115,15 +116,15 @@ if __name__ == '__main__':
     k_2dpca = config.k_2dpca
 
     # -------- PCA -------- #
-    # imagenes_pca, z_pca = PCA(imagenes, k_pca, True)
+    # imagenes_pca, z_pca = PCA(imagenes, k_pca, False)
     # obtenerMatricesCovarianzayCorrelación(z_pca, "_pca_" + str(k_pca))
     # plotter.imprimirImagenes(imagenes_pca)
 
     # -------- 2DPCA -------- #
-    #imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, True)
-    #z_aplanada = utils.aplanarImagenes(z_tdpca)
+    # imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, True)
+    # z_aplanada = utils.aplanarImagenes(z_tdpca)
     # obtenerMatricesCovarianzayCorrelación(z_aplanada, "_tdpca_" + str(k_2dpca))
-    #plotter.imprimirImagenes(imagenes_tdpca)
+    # plotter.imprimirImagenes(imagenes_tdpca)
 
     # -------- EXPERIMENTACION -------- #
     # Ejercicio 2
@@ -135,14 +136,14 @@ if __name__ == '__main__':
     # plotter.graficarAutovalores("covarianza_eigenValues.csv")
     #data, labels = plotter.leerMatrices()
     #plotter.graficarCorrelacion(data, labels)
-    # plotter.graficarMetricasSimiliaridad(data, labels)
-    ks = [10, 20]
+    #plotter.graficarMetricasSimiliaridad(data, labels)
+    #ks = [10, 20]
 
-    imagenes_procesadas = {"pca":{}, "tdpca":{}}
+    #imagenes_procesadas = {"pca":{}, "tdpca":{}}
 
-    for k in ks:
-        imagenes_pca, z_pca = PCA(imagenes, k, True)
-        imagenes_tdpca, z_tdpca = TDPCA(imagenes, k, True)
-        imagenes_procesadas["pca"][k] = imagenes_pca
-        imagenes_procesadas["tdpca"][k] = imagenes_tdpca
-    plotter.graficarErrorCompresion(imagenes, imagenes_procesadas)
+    #for k in ks:
+    #    imagenes_pca, z_pca = PCA(imagenes, k, True)
+    #    imagenes_tdpca, z_tdpca = TDPCA(imagenes, k, True)
+    #    imagenes_procesadas["pca"][k] = imagenes_pca
+    #    imagenes_procesadas["tdpca"][k] = imagenes_tdpca
+    #plotter.graficarErrorCompresion(imagenes, imagenes_procesadas)

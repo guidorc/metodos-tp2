@@ -21,8 +21,8 @@ def cargarImagenes():
     return result
 
 def leerMatriz(path, filename, cols=None):
+    # LEE LAS MATRICES POR COLUMNAS
     matrix = open(path + filename)
-    # return pd.read_csv(matrix, delimiter=",", dtype=None).T.values[:-1]
     if cols:
         return np.genfromtxt(matrix, delimiter=",", names=True, dtype=None, unpack=True, usecols=range(cols))
     else:
