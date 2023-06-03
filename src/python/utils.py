@@ -12,7 +12,7 @@ def centrarMatriz(X):
     return X_c
 
 def calcularCovarianza(m):
-    return np.dot(1 / (len(m) - 1), np.matmul(m.transpose(), m))
+    return (1 / (len(m) - 1)) * np.matmul(m.transpose(), m)
 
 def matrizDeCorrelación(C):
     rows, cols = C.shape
@@ -26,6 +26,7 @@ def matrizDeCorrelación(C):
 def matrizDeCovarianza(X):
     # centrar matriz
     X_c = centrarMatriz(X)
+    # C = np.cov(np.transpose(X_c))
     # Matriz de covarianza
     C = calcularCovarianza(np.array(X_c))
     return C
@@ -40,14 +41,14 @@ def aplanarImagenes(imagenes):
 def proyectar(V, x_i, k):
     z_i = []
     for i in range(k):
-        z_i.append(np.matmul(np.transpose(V[i]), x_i))
+        z_i.append(np.dot(V[:,i], x_i))
     return np.array(z_i)
 
-def reconstruirImagen(x, V, k):
-    z_x = np.matmul(np.transpose(V), x)
-    x = np.dot(z_x[0], V[0])
+def reconstruirImagen(z, V, k):
+    # z_x = np.matmul(np.transpose(V), z)
+    x = (z[0]*V[:,0])
     for i in range(1, k):
-        x += np.dot(z_x[i], V[i])
+        x += (z[i]*V[:,i])
     return x
 
 def formatearImagenes(imagenes, h, w):

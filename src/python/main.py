@@ -16,6 +16,7 @@ def obtenerMatricesCovarianzayCorrelación(X, sufijo = ''):
     IO.write(np.matrix(C), "covarianza" + sufijo + ".txt")
     print("Escribiendo Matriz de Correlación")
     IO.write(np.matrix(R), "correlacion" + sufijo + ".txt")
+    return C
 
 def proyectarPCA(V, X, k):
     Z = []
@@ -24,10 +25,10 @@ def proyectarPCA(V, X, k):
         Z.append(z_i)
     return np.array(Z)
 
-def reconstruirPCA(V, X, k, h, w):
+def reconstruirPCA(V, Z, k, h, w):
     imagenes_reconstruidas = []
-    for i in range(len(X)):
-        imagenes_reconstruidas.append(utils.reconstruirImagen(X[i], V, k))
+    for i in range(len(Z)):
+        imagenes_reconstruidas.append(utils.reconstruirImagen(Z[i], V, k))
     imagenes_formateadas = utils.formatearImagenes(imagenes_reconstruidas, h, w)
     return imagenes_formateadas
 
@@ -35,18 +36,25 @@ def reconstruirPCA(V, X, k, h, w):
 def PCA(imagenes, k, calcularCovarianza = False):
     # -------- PCA -------- #
     X = utils.aplanarImagenes(imagenes)
+    V_np = []
     # Obtener componentes principales
     if calcularCovarianza:
-        obtenerMatricesCovarianzayCorrelación(X)
+        C = obtenerMatricesCovarianzayCorrelación(X)
         # Calcular autovalores y autovectores de matriz de covarianza
         print("Ejecutando Deflacion para Matriz de Covarianza")
-        ejecutar.correrTp("covarianza")
-    V = IO.leerMatriz("resultados/", "covarianza_eigenVectors.csv")
+        # ejecutar.correrTp("covarianza")
+        # correr con numpy para comparar
+        w, V = np.linalg.eigh(C)
+        i = 0
+        while i < len(w)-1-i :
+            w[i], w[len(w)-1-i] = w[len(w)-1-i], w[i]
+            V[i], w[len(w)-1-i] = V[len(w)-1-i], V[i]
+    # V = np.array(IO.leerMatriz("resultados/", "covarianza_eigenVectors.csv"))
     # Obtener proyeccion de menor dimension
     Z = proyectarPCA(V, X, k)
     # Reconstruir imagenes
     _, h, w = imagenes.shape
-    return reconstruirPCA(V, X, k, h, w), Z
+    return reconstruirPCA(V, Z, k, h, w), Z
 
 
 def reconstruirTDPCA(M, U, k):
@@ -71,12 +79,15 @@ def TDPCA(imagenes, k, calcularAutovectores=False):
     # Calculo matriz de correlacion
     R = utils.matrizDeCorrelacionTDPCA(G)
     # Calculo base de autovectores
+    U_np = []
     if calcularAutovectores:
         # Calcular autovectores de G
         IO.write(np.matrix(G), "covarianza_2dpca.txt")
-        IO.write(np.matrix(G), "correlacion_2dpca.txt")
-        ejecutar.correrTp("covarianza_2dpca")
-    U = IO.leerMatriz("resultados/", "covarianza_2dpca_eigenVectors.csv")
+        IO.write(np.matrix(R), "correlacion_2dpca.txt")
+        # ejecutar.correrTp("covarianza_2dpca")
+        _, U_np = np.linalg.eigh(G)
+    U = U_np
+    # U = IO.leerMatriz("resultados/", "covarianza_2dpca_eigenVectors.csv")
     # Calcular feature vectors
     feature_matrix = []  # de n x a x b
     for _, A in enumerate(imagenes):
@@ -100,19 +111,19 @@ if __name__ == '__main__':
     k_2dpca = config.k_2dpca
 
     # -------- PCA -------- #
-    # imagenes_pca, z_pca = PCA(imagenes, k_pca, False)
-    # obtenerMatricesCovarianzayCorrelación(z_pca, "_pca_" + str(k_pca))
-    # plotter.imprimirImagenes(imagenes_pca)
+    imagenes_pca, z_pca = PCA(imagenes, k_pca, True)
+    #obtenerMatricesCovarianzayCorrelación(z_pca, "_pca_" + str(k_pca))
+    plotter.imprimirImagenes(imagenes_pca)
 
     # -------- 2DPCA -------- #
-    # imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, False)
-    # z_aplanada = utils.aplanarImagenes(z_tdpca)
+    #imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, True)
+    #z_aplanada = utils.aplanarImagenes(z_tdpca)
     # obtenerMatricesCovarianzayCorrelación(z_aplanada, "_tdpca_" + str(k_2dpca))
-    # plotter.imprimirImagenes(imagenes_tdpca)
+    #plotter.imprimirImagenes(imagenes_tdpca)
 
     # -------- EXPERIMENTACION -------- #
     # plotter.graficarAutovalores("covarianza_eigenValues.csv")
-    data, labels = plotter.leerMatrices()
-    # plotter.graficarCorrelacion(data, labels)
+    #data, labels = plotter.leerMatrices()
+    #plotter.graficarCorrelacion(data, labels)
     # plotter.graficarMetricasSimiliaridad(data, labels)
 
