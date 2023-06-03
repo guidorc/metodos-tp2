@@ -21,10 +21,15 @@ int main(int argc, char *argv[]) {
 
   // Lectura de matriz
   string filename = "./matrices/" + input + ".txt";
-  Matrix<double , Dynamic, Dynamic, RowMajor> M = read(filename);
+  Matrix<double , Dynamic, Dynamic, RowMajor> M = readMatrixFromFile(filename);
+
+  int k = M.rows();
+  if (argc > 4) {
+    k = atof(argv[4]);
+  }
 
   // Calculo de autovalores y autovectores
-  vector<eigenPair> res = deflationMethod(M, iterations, tolerance);
+  vector<eigenPair> res = deflationMethod(M, iterations, tolerance, k);
 
   // Escritura de resultados
   writeResults(res, input);

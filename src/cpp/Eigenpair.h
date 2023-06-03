@@ -8,11 +8,9 @@
 #include <tuple>
 #include <vector>
 
-using namespace std;
-
 struct eigenPair {
   double eigenvalue;
-  vector<double> eigenvector;
+  std::vector<double> eigenvector;
 };
 
 #endif //METODOS_TP2_EIGENPAIR_H

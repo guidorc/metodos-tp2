@@ -9,7 +9,7 @@
 #include <string>
 
 using namespace std;
-using namespace MatrixOperator;
+using namespace Eigen;
 
 list<string> split(string originalString, char delim) {
   list<string> output;
@@ -24,68 +24,50 @@ list<string> split(string originalString, char delim) {
 }
 
 namespace MatrixOperator {
-  /*
-  MatrixXd read(string filename) {
-    int cols = 0, rows = 0;
-    double buff[MAXBUFSIZE];
+  Matrix<double, Dynamic, Dynamic, RowMajor> readMatrixFromFile(const std::string& filename) {
+    std::ifstream infile(filename);
+    if (!infile) {
+      std::cerr << "Error opening file: " << filename << std::endl;
+      // Return an empty matrix or handle the error in an appropriate way
+      return MatrixXd();
+    }
 
-    // Read numbers from file into buffer.
-    ifstream infile;
-    infile.open(filename);
-    while (!infile.eof()) {
-      string line;
-      getline(infile, line);
+    std::vector<std::vector<double>> matrixData;
 
-      int temp_cols = 0;
-      stringstream stream(line);
-      while(!stream.eof())
-        stream >> buff[cols*rows+temp_cols++];
+    std::string line;
+    while (std::getline(infile, line)) {
+      std::istringstream iss(line);
+      std::vector<double> row;
 
-      if (temp_cols == 0)
-        continue;
+      double value;
+      while (iss >> value) {
+        row.push_back(value);
+      }
 
-      if (cols == 0)
-        cols = temp_cols;
-
-      rows++;
+      if (!row.empty()) {
+        matrixData.push_back(row);
+      }
     }
 
     infile.close();
 
-    rows--;
-
-    // Populate matrix with numbers.
-    MatrixXd result(rows,cols);
-    for (int i = 0; i < rows; i++)
-      for (int j = 0; j < cols; j++)
-        result(i,j) = buff[ cols*i+j ];
-
-    return result;
-  }
-  */
-  Matrix<double , Dynamic, Dynamic, RowMajor> read(string filename) {
-    ifstream file(filename.c_str());
-    vector<vector<double>> res;
-    string line, temp;
-    // build matrix
-    vector<Triplet<double>> inputReader;
-    int rowNumber = 0;
-    while (getline(file, line)) {
-      list<string> linkList = split(line, ' ');
-      auto current = linkList.begin();
-      auto last = linkList.end();
-      int columnNumber = 0;
-      while (current != last) {
-        const string &ref = *current;
-        inputReader.push_back(Triplet(rowNumber, columnNumber, stod(ref)));
-        current = std::next(current, 1);
-        columnNumber++;
-      }
-      rowNumber++;
+    if (matrixData.empty()) {
+      std::cerr << "Empty matrix in file: " << filename << std::endl;
+      // Return an empty matrix or handle the error in an appropriate way
+      return MatrixXd();
     }
-    SparseMatrix<double> result(rowNumber, rowNumber);
-    result.setFromTriplets(inputReader.begin(), inputReader.end());
-    return result;
+
+    int rows = matrixData.size();
+    int cols = matrixData[0].size();
+
+    Matrix<double, Dynamic, Dynamic, RowMajor> matrix(rows, cols);
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+        matrix(i, j) = matrixData[i][j];
+      }
+    }
+
+    return matrix;
   }
 
   eigenPair powerIteration(const Matrix<double , Dynamic, Dynamic, RowMajor> &A, unsigned int iterations, double epsilon) {
@@ -111,20 +93,20 @@ namespace MatrixOperator {
     return result;
   }
 
-  vector<eigenPair> deflationMethod(const Matrix<double , Dynamic, Dynamic, RowMajor> &m, int iterations, double epsilon) {
+  std::vector<eigenPair> deflationMethod(const Matrix<double , Dynamic, Dynamic, RowMajor> &m, int iterations, double epsilon, int k) {
     Matrix<double , Dynamic, Dynamic, RowMajor> A = m;
-    vector<eigenPair> result;
+    std::vector<eigenPair> result;
     double a = 0;
     VectorXd v = VectorXd::Zero(A.rows());
     eigenPair p;
-    for (int i = 0; i < m.rows(); i++) {
+    for (int i = 0; i < k; i++) {
       cout << "calculating eigenvalue: " << to_string(i) << endl;
       Matrix<double , Dynamic, Dynamic, RowMajor> sub = (a * v * v.transpose());
       A = A - sub;
       p = powerIteration(A, iterations, epsilon);
       result.push_back(p);
       a = p.eigenvalue;
-      vector<double> ev = p.eigenvector;
+      std::vector<double> ev = p.eigenvector;
       v = Eigen::Map<Eigen::VectorXd, Eigen::Unaligned>(ev.data(), ev.size());
     }
     return result;

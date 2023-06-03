@@ -9,11 +9,11 @@ using namespace std;
 
 namespace IO {
   bool compareByEigenValue(const eigenPair &ep1, const eigenPair &ep2) {
-    return ep1.eigenvalue < ep2.eigenvalue;
+    return ep1.eigenvalue > ep2.eigenvalue;
   }
 
   void writeEigenVectors(ofstream &file, vector<eigenPair> &results) {
-    vector<vector<double>> transposed(results.size());
+    vector<vector<double>> transposed(results[0].eigenvector.size());
     for (eigenPair pair: results) {
       int row = 0;
       for (double v_i: pair.eigenvector) {
