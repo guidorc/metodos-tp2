@@ -14,21 +14,19 @@ def centrarMatriz(X):
 def calcularCovarianza(m):
     return (1 / (len(m) - 1)) * np.matmul(m.transpose(), m)
 
-def matrizDeCorrelación(C):
-    rows, cols = C.shape
-    R = np.zeros((rows, cols))
+def matrizDeCorrelación(X_c):
+    return np.corrcoef(np.matmul(X_c, np.transpose(X_c)))
+    # rows, cols = C.shape
+    # R = np.zeros((rows, cols))
 
-    for i in range(cols):
-        for j in range(cols):
-            R[i][j] = C[i][j] / (math.sqrt(C[i][i]*C[j][j]))
-    return R
+    # for i in range(cols):
+    #     for j in range(cols):
+    #         R[i][j] = C[i][j] / (math.sqrt(C[i][i]*C[j][j]))
+    # return R
 
 def matrizDeCovarianza(X):
-    # centrar matriz
-    X_c = centrarMatriz(X)
-    # C = np.cov(np.transpose(X_c))
     # Matriz de covarianza
-    C = calcularCovarianza(np.array(X_c))
+    C = calcularCovarianza(np.array(X))
     return C
 
 def aplanarImagenes(imagenes):
@@ -60,10 +58,10 @@ def formatearImagenes(imagenes, h, w):
     return np.array(res)
 def imagenPromedio(imagenes):
     P = np.zeros(np.shape(imagenes[0]))
-    for i in range(len(imagenes)):
-        m_i = imagenes[i]
-        P += m_i
-    return np.dot(1 / (len(imagenes)), P)
+    for imagen in imagenes:
+        P += imagen
+    res = (1 / (len(imagenes))) * P
+    return res
 
 def imageCovarianceMatrix(imagenes):
     n = len(imagenes)

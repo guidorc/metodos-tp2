@@ -4,8 +4,9 @@ import IO
 import matplotlib.pyplot as plt
 
 
-def imprimirImagenes(imagenes):
-    f, axs = plt.subplots(5, 2, figsize=(3, 8))
+def imprimirImagenes(imagenes, shape=(5,2)):
+    x, y = shape
+    f, axs = plt.subplots(x, y, figsize=(3, 8))
     for i, ax in enumerate(axs.flatten()):
         ax.imshow(imagenes[i], cmap=plt.cm.gray);
         ax.axis('off')
@@ -48,9 +49,15 @@ def graficarCorrelacion(data, labels):
     # plt.tight_layout()
     plt.show()
 
-def graficarMetricasSimiliaridad(data, labels):
-    # :)
-    print("Esta función está en construcción, disculpe las molestias ocasionadas. -Metrovías")
+def graficarEigenFacesPCA(filename, cantidad):
+    V = IO.leerMatriz("resultados/", filename, cantidad)
+    eigenFaces = []
+    for autovector in V:
+        v_i = np.reshape(autovector, (56, 46))
+        eigenFaces.append(v_i)
+    imprimirImagenes(eigenFaces)
+
+# def graficarEigenFacesTDPCA(Z):
 
 def graficarErrorCompresion(imagenes, imagenes_procesadas):
     errores = {"PCA": {}, "2DPCA":{}}
@@ -79,4 +86,3 @@ def calcularErrorCompresion(imagenes, imagenes_pca):
     for i in range(len(imagenes)):
         error[i] = np.linalg.norm(np.subtract(imagenes[i], imagenes_pca[i]), ord=2)
     return np.mean(error)
-
