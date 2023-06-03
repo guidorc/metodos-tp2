@@ -48,7 +48,8 @@ def PCA(imagenes, k, calcularCovarianza = False):
         i = 0
         while i < len(w)-1-i :
             w[i], w[len(w)-1-i] = w[len(w)-1-i], w[i]
-            V[i], w[len(w)-1-i] = V[len(w)-1-i], V[i]
+            V[i], V[len(w)-1-i] = V[len(w)-1-i], V[i]
+            i+=1
     # V = np.array(IO.leerMatriz("resultados/", "covarianza_eigenVectors.csv"))
     # Obtener proyeccion de menor dimension
     Z = proyectarPCA(V, X, k)
@@ -111,9 +112,9 @@ if __name__ == '__main__':
     k_2dpca = config.k_2dpca
 
     # -------- PCA -------- #
-    imagenes_pca, z_pca = PCA(imagenes, k_pca, True)
+    # imagenes_pca, z_pca = PCA(imagenes, k_pca, True)
     #obtenerMatricesCovarianzayCorrelación(z_pca, "_pca_" + str(k_pca))
-    plotter.imprimirImagenes(imagenes_pca)
+    #plotter.imprimirImagenes(imagenes_pca)
 
     # -------- 2DPCA -------- #
     #imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, True)
@@ -126,4 +127,13 @@ if __name__ == '__main__':
     #data, labels = plotter.leerMatrices()
     #plotter.graficarCorrelacion(data, labels)
     # plotter.graficarMetricasSimiliaridad(data, labels)
+    ks = [10, 20]
 
+    imagenes_procesadas = {"pca":{}, "tdpca":{}}
+
+    for k in ks:
+        imagenes_pca, z_pca = PCA(imagenes, k, True)
+        imagenes_tdpca, z_tdpca = TDPCA(imagenes, k, True)
+        imagenes_procesadas["pca"][k] = imagenes_pca
+        imagenes_procesadas["tdpca"][k] = imagenes_tdpca
+    plotter.graficarErrorCompresion(imagenes, imagenes_procesadas)

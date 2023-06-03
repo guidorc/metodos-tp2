@@ -51,3 +51,32 @@ def graficarCorrelacion(data, labels):
 def graficarMetricasSimiliaridad(data, labels):
     # :)
     print("Esta función está en construcción, disculpe las molestias ocasionadas. -Metrovías")
+
+def graficarErrorCompresion(imagenes, imagenes_procesadas):
+    errores = {"PCA": {}, "2DPCA":{}}
+
+    for k in imagenes_procesadas["pca"].keys():
+        errores["PCA"][k] = calcularErrorCompresion(imagenes, imagenes_procesadas["pca"][k])
+
+    # errores_tdpca = {}
+    for k in imagenes_procesadas["tdpca"].keys():
+        errores["2DPCA"][k] = calcularErrorCompresion(imagenes, imagenes_procesadas["tdpca"][k])
+
+    for error in errores.values():
+        x = error.keys()
+        y = error.values()
+        plt.scatter(x, y)
+
+    plt.legend(errores.keys())
+
+    plt.title('Error de Compresión')
+    plt.xlabel('Valores de k')
+    plt.ylabel('Error')
+    plt.show()
+
+def calcularErrorCompresion(imagenes, imagenes_pca):
+    error = np.zeros(len(imagenes))
+    for i in range(len(imagenes)):
+        error[i] = np.linalg.norm(np.subtract(imagenes[i], imagenes_pca[i]), ord=2)
+    return np.mean(error)
+
