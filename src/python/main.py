@@ -172,7 +172,6 @@ def errorPcaVsTdpca(imagenes):
         imagenes_procesadas["tdpca"][k] = imagenes_tdpca
     plotter.graficarErrorCompresion(imagenes, imagenes_procesadas, "Error de compresión PCA vs 2DPCA")
 
-
 def errorSetReducido(imagenes, metodo, ks):
     imagenes_procesadas = {"completo": {}, "reducido": {}}
     for k in ks:
@@ -189,44 +188,34 @@ if __name__ == '__main__':
     k_pca = config.k_pca
     k_2dpca = config.k_2dpca
 
-    # -------- PCA -------- #
-    # imagenes_pca, z_pca = PCA(imagenes, k_pca, True)
-    # obtenerMatricesCovarianzayCorrelación(z_pca, "_pca_" + str(k_pca))
-    # plotter.imprimirImagenes(imagenes_pca)
-
-    # -------- 2DPCA -------- #
-    # imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, True)
-    # z_aplanada = utils.aplanarImagenes(z_tdpca)
-    # obtenerMatricesCovarianzayCorrelación(z_aplanada, "_tdpca_" + str(k_2dpca))
-    # plotter.imprimirImagenes(imagenes_tdpca)
-
     # -------- EXPERIMENTACION -------- #
     # Ejercicio 2
     # b) Observar autovalores de mayor a menor
-    # graficarAutovalores()
+    PCA(imagenes, k_pca, True)
+    TDPCA(imagenes, k_2dpca, True)
+    graficarAutovalores()
 
     # c) Observar eigenfaces
-    # generarEigenFaces()
+    generarEigenFaces()
 
     # d) Regeneramos rostros de la primer persona, para distintos valores de k
-    # regenerarRostros(imagenes)
+    regenerarRostros(imagenes)
 
     # Ejercicio 3
     # a) Visualizar matriz de correlación
-    # generarCorrelacion(imagenes, [50, 400], [5,40])
-    # filenames = ["correlacion", "correlacion_pca_50", "correlacion_pca_400", "correlacion_2dpca_5", "correlacion_2dpca_40"]
-    # data, labels = IO.leerMatricesCorrelacion(filenames)
-    # for matriz, label, filename in zip(data, labels, filenames):
-    #     plotter.graficarCorrelacion(matriz, label, filename)
+    generarCorrelacion(imagenes, [50, 400], [5,40])
+    filenames = ["correlacion", "correlacion_pca_50", "correlacion_pca_400", "correlacion_2dpca_5", "correlacion_2dpca_40"]
+    data, labels = IO.leerMatricesCorrelacion(filenames)
+    for matriz, label, filename in zip(data, labels, filenames):
+        plotter.graficarCorrelacion(matriz, label, filename)
 
     # b) Metricas de similaridad
     # generarCorrelacion(imagenes, list(range(10, 100, 10)), list(range(5, 45, 5)))
     # data, labels = data, labels = IO.leerMatricesCorrelacion(filenames)
     # mismo, distinto = calcularMetricas(data[0])
-
-    #plotter.graficarMetricasSimiliaridad(data, labels)
+    # plotter.graficarMetricasSimiliaridad(data, labels)
 
     # c) Error de compresion
-    # errorPcaVsTdpca(imagenes)
-    # errorSetReducido(imagenes, PCA, list(range(50, 400, 50)))
-    # errorSetReducido(imagenes, TDPCA, list(range(5, 45, 5)))
+    errorPcaVsTdpca(imagenes)
+    errorSetReducido(imagenes, PCA, list(range(50, 400, 50)))
+    errorSetReducido(imagenes, TDPCA, list(range(5, 45, 5)))
