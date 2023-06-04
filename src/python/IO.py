@@ -13,10 +13,12 @@ def write(m, filename, path='matrices/'):
 def cargarImagenes():
     paths = []
     imgs = []
-    for path in sorted(list(Path('matrices/caras/s1').rglob('*.pgm'))):
-        paths.append(path)
-        image = (plt.imread(path)[::2, ::2]/255)
-        imgs.append(image)
+    for i in range(1, 43):
+        directorio = "matrices/caras/s" + str(i)
+        for path in sorted(list(Path(directorio).rglob('*.pgm'))):
+            paths.append(path)
+            image = (plt.imread(path)[::2, ::2]/255)
+            imgs.append(image)
     result = np.stack(imgs)
     return result
 

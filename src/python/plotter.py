@@ -4,20 +4,31 @@ import IO
 import matplotlib.pyplot as plt
 
 
-def imprimirImagenes(imagenes, shape=(5,2)):
+def imprimirImagenes(imagenes, destino=None, shape=(5,2)):
     x, y = shape
     f, axs = plt.subplots(x, y, figsize=(3, 8))
     for i, ax in enumerate(axs.flatten()):
         ax.imshow(imagenes[i], cmap=plt.cm.gray);
         ax.axis('off')
     plt.tight_layout()
+    if destino:
+        plt.savefig(destino)
     plt.show()
 
 
-def graficarAutovalores(filename):
-    autovalores = IO.leerMatriz("resultados/", filename)[0][-10:]
-    # plt.yscale("log")
+def graficarAutovalores(filename, metodo, cantidad):
+    autovalores = IO.leerMatriz("resultados/", filename)[0][:cantidad]
     plt.plot(autovalores)
+    if metodo == "2DPCA":
+        plt.xticks(range(cantidad))
+    if metodo == "PCA":
+        x_axis = list(range(0, 30, 5)) + list(range(30, 101, 10))
+        plt.xticks(x_axis)
+    plt.title('Autovalores ordenados de ' + metodo)
+    plt.xlabel('Componente Principal')
+    plt.ylabel('Autovalor')
+    plt.grid(alpha=0.5)
+    plt.savefig('resultados/ejercicio_2/item_b/grafico_autovalores_' + metodo)
     plt.show()
 
 def leerMatrices():
@@ -55,7 +66,7 @@ def graficarEigenFacesPCA(filename, cantidad):
     for autovector in V:
         v_i = np.reshape(autovector, (56, 46))
         eigenFaces.append(v_i)
-    imprimirImagenes(eigenFaces)
+    imprimirImagenes(eigenFaces, 'resultados/ejercicio_2/item_c/eigenfaces_pca')
 
 # def graficarEigenFacesTDPCA(Z):
 

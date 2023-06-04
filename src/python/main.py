@@ -38,20 +38,12 @@ def reconstruirPCA(V, Z, k, h, w):
 def PCA(imagenes, k, calcularCovarianza = False):
     # -------- PCA -------- #
     X = utils.aplanarImagenes(imagenes)
-    V_np = []
     # Obtener componentes principales
     if calcularCovarianza:
         C = obtenerMatricesCovarianzayCorrelación(X)
         # Calcular autovalores y autovectores de matriz de covarianza
         print("Ejecutando Deflacion para Matriz de Covarianza")
         ejecutar.correrTp("covarianza", k)
-        # correr con numpy para comparar
-        # w, V_np = np.linalg.eigh(C)
-        # i = 0
-        # reordenar autovalores y autovectores
-        # while i < len(w)-1-i:
-        #    w[i], w[len(w)-1-i] = w[len(w)-1-i], w[i]
-        #    V_np[i], V_np[len(w)-1-i] = V_np[len(w)-1-i], V_np[i]
     V = np.array(IO.leerMatriz("resultados/", "covarianza_eigenVectors.csv", k))
     # Obtener proyeccion de menor dimension
     Z = proyectarPCA(V, X, k)
@@ -82,15 +74,11 @@ def TDPCA(imagenes, k, calcularAutovectores=False):
     # Calculo matriz de correlacion
     R = utils.matrizDeCorrelación(G)
     # Calculo base de autovectores
-    U_np = []
-    W = []
     if calcularAutovectores:
         # Calcular autovectores de G
         IO.write(np.matrix(G), "covarianza_2dpca.txt")
         IO.write(np.matrix(R), "correlacion_2dpca.txt")
         ejecutar.correrTp("covarianza_2dpca")
-        # _, U_np = np.linalg.eigh(G)
-    # U = np.flip(U_np) # U = [X_1, ..., X_n]
     U = IO.leerMatriz("resultados/", "covarianza_2dpca_eigenVectors.csv")
     # Calcular feature vectors
     feature_matrix = []  # de n x a x b
@@ -109,6 +97,32 @@ def TDPCA(imagenes, k, calcularAutovectores=False):
     return reconstruirTDPCA(feature_matrix, U, k), np.array(Z[:k])
 
 
+def graficarAutovalores():
+    # PCA
+    plotter.graficarAutovalores("covarianza_eigenValues.csv", "PCA", 100)
+    # 2DPCA
+    plotter.graficarAutovalores("covarianza_2dpca_eigenValues.csv", "2DPCA", 20)
+
+def generarEigenFaces():
+    # PCA:
+    plotter.graficarEigenFacesPCA("covarianza_eigenVectors.csv", 10)
+    # 2DPCA
+    # plotter.graficarEigenFacesTDPCA(z_aplanada, 10)
+
+
+def regenerarRostros(imagenes):
+    folder = "resultados/ejericico_2/item_d/"
+    # PCA
+    for componentes in [10, 100, 200, 300, 400]:
+        rostros_pca, _ = PCA(imagenes, componentes, False)
+        filename = 'rostros_pca_' + str(componentes)
+        plotter.imprimirImagenes(rostros_pca, folder + filename)
+    # 2DPCA
+    for componentes in [5, 10, 20, 30, 40]:
+        rostros_tdpca, _ = TDPCA(imagenes, componentes, False)
+        filename = 'rostros_2dpca_' + str(componentes)
+        plotter.imprimirImagenes(rostros_tdpca, folder + filename)
+
 if __name__ == '__main__':
     # Leer caras
     imagenes = IO.cargarImagenes()
@@ -116,24 +130,27 @@ if __name__ == '__main__':
     k_2dpca = config.k_2dpca
 
     # -------- PCA -------- #
-    # imagenes_pca, z_pca = PCA(imagenes, k_pca, False)
+    # imagenes_pca, z_pca = PCA(imagenes, k_pca, True)
     # obtenerMatricesCovarianzayCorrelación(z_pca, "_pca_" + str(k_pca))
     # plotter.imprimirImagenes(imagenes_pca)
 
     # -------- 2DPCA -------- #
-    # imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, True)
+    # imagenes_tdpca, z_tdpca = TDPCA(imagenes, k_2dpca, False)
     # z_aplanada = utils.aplanarImagenes(z_tdpca)
     # obtenerMatricesCovarianzayCorrelación(z_aplanada, "_tdpca_" + str(k_2dpca))
     # plotter.imprimirImagenes(imagenes_tdpca)
 
     # -------- EXPERIMENTACION -------- #
     # Ejercicio 2
-    # c) Observar eigenfaces, usamos los 10 primeros autovectores
-        # PCA:
-    # plotter.graficarEigenFacesPCA("covarianza_eigenVectors.csv", 10)
-        # 2DPCA
-    # plotter.graficarEigenFacesTDPCA(z_aplanada, 10)
-    # plotter.graficarAutovalores("covarianza_eigenValues.csv")
+    # b) Observar autovalores de mayor a menor
+    # graficarAutovalores()
+
+    # c) Observar eigenfaces
+    generarEigenFaces()
+
+    # d) Regeneramos rostros de la primer persona, para distintos valores de k
+    # regenerarRostros(imagenes)
+
     #data, labels = plotter.leerMatrices()
     #plotter.graficarCorrelacion(data, labels)
     #plotter.graficarMetricasSimiliaridad(data, labels)
