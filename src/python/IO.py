@@ -13,7 +13,7 @@ def write(m, filename, path='matrices/'):
 def cargarImagenes():
     paths = []
     imgs = []
-    for i in range(1, 43):
+    for i in range(1, 42):
         directorio = "matrices/caras/s" + str(i)
         for path in sorted(list(Path(directorio).rglob('*.pgm'))):
             paths.append(path)
@@ -29,6 +29,16 @@ def leerMatriz(path, filename, cols=None):
         return np.genfromtxt(matrix, delimiter=",", names=True, dtype=None, unpack=True, usecols=range(cols))
     else:
         return np.genfromtxt(matrix, delimiter=",", names=True, dtype=None, unpack=True)[:-1]
+
+
+def leerMatricesCorrelacion(filenames):
+    labels = ["Conjunto de datos original", "Datos procesados con PCA para k=50", "Datos procesados con PCA para k=400", "Datos procesados con 2DPCA para k=5", "Datos procesados con 2DPCA para k=40"]
+    data = []
+    for i, filename in enumerate(filenames):
+        # print("Leyendo ", filename)
+        data.append(leerMatrizCorrelacion("matrices/", filename + ".txt"))
+    return data, labels
+
 
 def leerMatrizCorrelacion(path, filename):
     matrix = open(path + filename)

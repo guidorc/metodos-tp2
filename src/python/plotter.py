@@ -31,34 +31,17 @@ def graficarAutovalores(filename, metodo, cantidad):
     plt.savefig('resultados/ejercicio_2/item_b/grafico_autovalores_' + metodo)
     plt.show()
 
-def leerMatrices():
-    filenames = ["correlacion.txt", "correlacion_pca_100.txt", "correlacion_pca_100.txt", "correlacion_tdpca_10.txt", "correlacion_tdpca_10.txt"]
-    labels = ["Conjunto de datos original", "Datos procesados con PCA para k=100", "Datos procesados con PCA para k=100", "Datos procesados con 2DPCA para k=10", "Datos procesados con 2DPCA para k=10"]
-    data = []
-    for i, filename in enumerate(filenames):
-        # print("Leyendo ", filename)
-        data.append(IO.leerMatrizCorrelacion("matrices/", filename))
-    return data, labels
-def graficarCorrelacion(data, labels):
-    fig, axs = plt.subplots(1, 5, figsize=(18, 4))
 
+def graficarCorrelacion(matrix, label, filename):
+    fig, ax = plt.subplots()
     fig.suptitle("Matrices de Correlación", fontsize=16)
-
-    for i, ax in enumerate(axs):
-        heatmap = ax.pcolor(data[i], cmap= 'GnBu')
-        # print(data[i][:10])
-
-        # Labels
-        ax.set_title(labels[i])
-        # ax.set_xlabel("X-axis")
-        # ax.set_ylabel("Y-axis")
-
-        # Colorbar
-        cbar = fig.colorbar(heatmap, ax=ax)
-        # cbar.set_label('Colorbar Label')
-
-    # plt.tight_layout()
-    plt.show()
+    heatmap = ax.pcolor(matrix, cmap= 'RdBu')
+    ax.set_title(label)
+    ax.set_aspect("equal")
+    fig.colorbar(heatmap, ax=ax)
+    plt.tight_layout()
+    plt.savefig('resultados/ejercicio_3/item_a/' + filename)
+    plt.clf()
 
 def graficarEigenFacesPCA(filename, cantidad):
     V = IO.leerMatriz("resultados/", filename, cantidad)
@@ -70,15 +53,14 @@ def graficarEigenFacesPCA(filename, cantidad):
 
 # def graficarEigenFacesTDPCA(Z):
 
-def graficarErrorCompresion(imagenes, imagenes_procesadas):
-    errores = {"PCA": {}, "2DPCA":{}}
+def graficarErrorCompresion(imagenes, imagenes_procesadas, titulo, metodo1="pca", metodo2="tdpca"):
+    errores = {metodo1: {}, metodo2:{}}
 
-    for k in imagenes_procesadas["pca"].keys():
-        errores["PCA"][k] = calcularErrorCompresion(imagenes, imagenes_procesadas["pca"][k])
+    for k in imagenes_procesadas[metodo1].keys():
+        errores[metodo1][k] = calcularErrorCompresion(imagenes, imagenes_procesadas[metodo1][k])
 
-    # errores_tdpca = {}
-    for k in imagenes_procesadas["tdpca"].keys():
-        errores["2DPCA"][k] = calcularErrorCompresion(imagenes, imagenes_procesadas["tdpca"][k])
+    for k in imagenes_procesadas[metodo2].keys():
+        errores[metodo2][k] = calcularErrorCompresion(imagenes, imagenes_procesadas[metodo2][k])
 
     for error in errores.values():
         x = error.keys()
@@ -87,9 +69,10 @@ def graficarErrorCompresion(imagenes, imagenes_procesadas):
 
     plt.legend(errores.keys())
 
-    plt.title('Error de Compresión')
+    plt.title(titulo)
     plt.xlabel('Valores de k')
     plt.ylabel('Error')
+    plt.savefig('resultados/ejercicio_3/item_c/' + titulo)
     plt.show()
 
 def calcularErrorCompresion(imagenes, imagenes_pca):
