@@ -51,24 +51,22 @@ def PCA(imagenes, k, calcularCovarianza = False, autovectores="covarianza_eigenV
     _, h, w = imagenes.shape
     return reconstruirPCA(V, Z, k, h, w), Z
 
-
 def reconstruirTDPCA(M, U, k):
-    h = len(M[0][0])
-    w = len(U[0])
-    # U_t = np.transpose(U)
+    h = np.shape(M[0])[1]
+    w = np.shape(M[0])[0]
     imagenes_reconstruidas = []
-    for Y in M:
+    for V in M:
         A = np.zeros((h, w))
         for i in range(k):
-            y_i = Y[i]
-            x_i = U[i]
-            A += np.outer(y_i, x_i)
+            Y_i = V[i]
+            X_i = U[i]
+            A += np.outer(Y_i, X_i)
         imagenes_reconstruidas.append(A)
     for i, imagen in enumerate(imagenes_reconstruidas):
         IO.write(imagen, str(i) + '.pgm', 'resultados/caras/s1')
     return np.array(imagenes_reconstruidas)
 
-def TDPCA(imagenes, k, calcularAutovectores=False, autovectores="covarianza_2dpca_eigenVectors.csv"):
+def TDPCA(imagenes, k, calcularAutovectores=False):
     # Calculo image covariance matrix
     G = utils.imageCovarianceMatrix(imagenes)
     # Calculo matriz de correlacion
@@ -79,21 +77,20 @@ def TDPCA(imagenes, k, calcularAutovectores=False, autovectores="covarianza_2dpc
         IO.write(np.matrix(G), "covarianza_2dpca.txt")
         IO.write(np.matrix(R), "correlacion_2dpca.txt")
         ejecutar.correrTp("covarianza_2dpca")
-    U = IO.leerMatriz("resultados/", autovectores)
+    U = np.array(IO.leerMatriz("resultados/", "covarianza_2dpca_eigenVectors.csv"))
     # Calcular feature vectors
     feature_matrix = []  # de n x a x b
-    for _, A in enumerate(imagenes):
+    for A in imagenes:
         # Calculo matriz de feature vectors para A de a x b
-        Y = []  # Y de a x b
+        V = []  # V de a x b
         for i in range(len(U)):
             X_i = U[i]
-            Y.append(np.matmul(A, X_i))
-        feature_matrix.append(Y)
+            V.append(np.matmul(A, X_i))
+        feature_matrix.append(np.array(V))
     # Obtener proyeccion de menor dimension
     Z = []
     for imagen in feature_matrix:
-        z_i = imagen[:k]
-        Z.append(z_i)
+        Z.append(imagen[:k])
     # Reconstruir imagenes
     return reconstruirTDPCA(feature_matrix, U, k), np.array(Z)
 
