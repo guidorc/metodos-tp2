@@ -188,15 +188,15 @@ if __name__ == '__main__':
     # -------- EXPERIMENTACION -------- #
     # Ejercicio 2
     # b) Observar autovalores de mayor a menor
-    PCA(imagenes, k_pca, True)
-    TDPCA(imagenes, k_2dpca, True)
-    graficarAutovalores()
+    #PCA(imagenes, k_pca, True)
+    #TDPCA(imagenes, k_2dpca, True)
+    #graficarAutovalores()
 
     # c) Observar eigenfaces
     generarEigenFaces()
 
     # d) Regeneramos rostros de la primer persona, para distintos valores de k
-    regenerarRostros(imagenes)
+    #regenerarRostros(imagenes)
 
     # Ejercicio 3
     # a) Visualizar matriz de correlación
@@ -213,6 +213,6 @@ if __name__ == '__main__':
     # plotter.graficarMetricasSimiliaridad(data, labels)
 
     # c) Error de compresion
-    errorPcaVsTdpca(imagenes)
-    errorSetReducido(imagenes, PCA, list(range(50, 400, 50)))
-    errorSetReducido(imagenes, TDPCA, list(range(5, 45, 5)))
+    #errorPcaVsTdpca(imagenes)
+    #errorSetReducido(imagenes, PCA, list(range(50, 400, 50)))
+    #errorSetReducido(imagenes, TDPCA, list(range(5, 45, 5)))

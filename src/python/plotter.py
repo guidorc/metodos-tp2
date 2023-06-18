@@ -41,6 +41,7 @@ def graficarCorrelacion(matrix, label, filename):
     fig.colorbar(heatmap, ax=ax)
     plt.tight_layout()
     plt.savefig('resultados/ejercicio_3/item_a/' + filename)
+    #plt.show()
     plt.clf()
 
 def graficarEigenFacesPCA(filename, cantidad):
