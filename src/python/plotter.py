@@ -52,7 +52,14 @@ def graficarEigenFacesPCA(filename, cantidad):
         eigenFaces.append(v_i)
     imprimirImagenes(eigenFaces, 'resultados/ejercicio_2/item_c/eigenfaces_pca')
 
-# def graficarEigenFacesTDPCA(Z):
+def graficarEigenFacesTDPCA(Y, U, k):
+    # Plotea las k primeras eigenfaces de 2DPCA
+    eigenFaces = []
+    for i in range(k):
+        eigenface = np.outer(Y[i], U[i])
+        eigenFaces.append(eigenface)
+    imprimirImagenes(eigenFaces, 'resultados/ejercicio_2/item_c/eigenfaces_2dpca')
+
 
 def graficarErrorCompresion(imagenes, imagenes_procesadas, titulo, metodo1="pca", metodo2="tdpca"):
     errores = {metodo1: {}, metodo2:{}}

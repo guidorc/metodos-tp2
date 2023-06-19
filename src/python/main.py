@@ -35,7 +35,7 @@ def reconstruirPCA(V, Z, k, h, w):
     return imagenes_formateadas
 
 
-def PCA(imagenes, k, calcularCovarianza = False, autovectores="covarianza_eigenVectors.csv"):
+def PCA(imagenes, k, calcularCovarianza = False, autovectores="covarianza_eigenVectors.csv", omitirAutovectores=True):
     # -------- PCA -------- #
     X = utils.aplanarImagenes(imagenes)
     # Obtener componentes principales
@@ -43,7 +43,10 @@ def PCA(imagenes, k, calcularCovarianza = False, autovectores="covarianza_eigenV
         C = obtenerMatricesCovarianzayCorrelación(X)
         # Calcular autovalores y autovectores de matriz de covarianza
         print("Ejecutando Deflacion para Matriz de Covarianza")
-        ejecutar.correrTp("covarianza", k)
+        if omitirAutovectores:
+            ejecutar.correrTp("covarianza", k)
+        else:
+            ejecutar.correrTp("covarianza")
     V = np.array(IO.leerMatriz("resultados/", autovectores, k))
     # Obtener proyeccion de menor dimension
     Z = proyectarPCA(V, X, k)
@@ -51,9 +54,11 @@ def PCA(imagenes, k, calcularCovarianza = False, autovectores="covarianza_eigenV
     _, h, w = imagenes.shape
     return reconstruirPCA(V, Z, k, h, w), Z
 
+
 def reconstruirTDPCA(M, U, k):
-    h = np.shape(M[0])[1]
-    w = np.shape(M[0])[0]
+    h = len(M[0][0])
+    w = len(U[0])
+    # U_t = np.transpose(U)
     imagenes_reconstruidas = []
     for V in M:
         A = np.zeros((h, w))
@@ -66,7 +71,7 @@ def reconstruirTDPCA(M, U, k):
         IO.write(imagen, str(i) + '.pgm', 'resultados/caras/s1')
     return np.array(imagenes_reconstruidas)
 
-def TDPCA(imagenes, k, calcularAutovectores=False):
+def TDPCA(imagenes, k, calcularAutovectores=False, autovectores="covarianza_2dpca_eigenVectors.csv", eigenfaces=False):
     # Calculo image covariance matrix
     G = utils.imageCovarianceMatrix(imagenes)
     # Calculo matriz de correlacion
@@ -77,21 +82,25 @@ def TDPCA(imagenes, k, calcularAutovectores=False):
         IO.write(np.matrix(G), "covarianza_2dpca.txt")
         IO.write(np.matrix(R), "correlacion_2dpca.txt")
         ejecutar.correrTp("covarianza_2dpca")
-    U = np.array(IO.leerMatriz("resultados/", "covarianza_2dpca_eigenVectors.csv"))
+    U = IO.leerMatriz("resultados/", autovectores)
     # Calcular feature vectors
     feature_matrix = []  # de n x a x b
     for A in imagenes:
         # Calculo matriz de feature vectors para A de a x b
-        V = []  # V de a x b
+        Y = []  # Y de a x b
         for i in range(len(U)):
             X_i = U[i]
-            V.append(np.matmul(A, X_i))
-        feature_matrix.append(np.array(V))
+            Y.append(np.matmul(A, X_i))
+        feature_matrix.append(Y)
     # Obtener proyeccion de menor dimension
     Z = []
     for imagen in feature_matrix:
-        Z.append(imagen[:k])
-    # Reconstruir imagenes
+        z_i = imagen[:k]
+        Z.append(z_i)
+    # Para obtener las eigenfaces usamos los feature vectors y los autovectores
+    if eigenfaces:
+        return feature_matrix, U
+    # Retorna imagenes reconstruidas y su proyección
     return reconstruirTDPCA(feature_matrix, U, k), np.array(Z)
 
 
@@ -101,11 +110,12 @@ def graficarAutovalores():
     # 2DPCA
     plotter.graficarAutovalores("covarianza_2dpca_eigenValues.csv", "2DPCA", 20)
 
-def generarEigenFaces():
+def generarEigenFaces(imagenes, k):
     # PCA:
-    plotter.graficarEigenFacesPCA("covarianza_eigenVectors.csv", 10)
+    # plotter.graficarEigenFacesPCA("covarianza_eigenVectors.csv", 10)
     # 2DPCA
-    # plotter.graficarEigenFacesTDPCA(z_aplanada, 10)
+    features, autovectores = TDPCA(imagenes, k, False, "covarianza_2dpca_eigenVectors.csv", True)
+    plotter.graficarEigenFacesTDPCA(features[0], autovectores, 10)
 
 
 def regenerarRostros(imagenes):
@@ -185,18 +195,20 @@ if __name__ == '__main__':
     k_pca = config.k_pca
     k_2dpca = config.k_2dpca
 
+    # Ejecutar PCA y 2DPCA para luego utilizar resultados
+    # PCA(imagenes, k_pca, True)
+    # TDPCA(imagenes, k_2dpca, True)
+
     # -------- EXPERIMENTACION -------- #
     # Ejercicio 2
     # b) Observar autovalores de mayor a menor
-    #PCA(imagenes, k_pca, True)
-    #TDPCA(imagenes, k_2dpca, True)
-    #graficarAutovalores()
+    graficarAutovalores()
 
     # c) Observar eigenfaces
-    generarEigenFaces()
+    generarEigenFaces(imagenes, k_2dpca)
 
     # d) Regeneramos rostros de la primer persona, para distintos valores de k
-    #regenerarRostros(imagenes)
+    regenerarRostros(imagenes)
 
     # Ejercicio 3
     # a) Visualizar matriz de correlación
@@ -207,12 +219,12 @@ if __name__ == '__main__':
         plotter.graficarCorrelacion(matriz, label, filename)
 
     # b) Metricas de similaridad
-    # generarCorrelacion(imagenes, list(range(10, 100, 10)), list(range(5, 45, 5)))
-    # data, labels = data, labels = IO.leerMatricesCorrelacion(filenames)
-    # mismo, distinto = calcularMetricas(data[0])
-    # plotter.graficarMetricasSimiliaridad(data, labels)
+    generarCorrelacion(imagenes, list(range(10, 100, 10)), list(range(5, 45, 5)))
+    data, labels = data, labels = IO.leerMatricesCorrelacion(filenames)
+    mismo, distinto = calcularMetricas(data[0])
+    plotter.graficarMetricasSimiliaridad(data, labels)
 
     # c) Error de compresion
-    #errorPcaVsTdpca(imagenes)
-    #errorSetReducido(imagenes, PCA, list(range(50, 400, 50)))
-    #errorSetReducido(imagenes, TDPCA, list(range(5, 45, 5)))
+    errorPcaVsTdpca(imagenes)
+    errorSetReducido(imagenes, PCA, list(range(50, 400, 50)))
+    errorSetReducido(imagenes, TDPCA, list(range(5, 45, 5)))

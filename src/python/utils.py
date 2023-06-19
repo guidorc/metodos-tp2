@@ -15,14 +15,7 @@ def calcularCovarianza(m):
     return (1 / (len(m) - 1)) * np.matmul(m.transpose(), m)
 
 def matrizDeCorrelación(X_c):
-    return np.corrcoef(X_c) # no multiplicar
-    # rows, cols = C.shape
-    # R = np.zeros((rows, cols))
-
-    # for i in range(cols):
-    #     for j in range(cols):
-    #         R[i][j] = C[i][j] / (math.sqrt(C[i][i]*C[j][j]))
-    # return R
+    return np.corrcoef(X_c)
 
 def matrizDeCovarianza(X):
     # Matriz de covarianza
