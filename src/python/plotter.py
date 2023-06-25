@@ -1,5 +1,5 @@
 import numpy as np
-import seaborn as sns
+import pandas as pd
 import IO
 import matplotlib.pyplot as plt
 
@@ -41,7 +41,6 @@ def graficarCorrelacion(matrix, label, filename):
     fig.colorbar(heatmap, ax=ax)
     plt.tight_layout()
     plt.savefig('resultados/ejercicio_3/item_a/' + filename)
-    #plt.show()
     plt.clf()
 
 def graficarEigenFacesPCA(filename, cantidad):
@@ -81,7 +80,20 @@ def graficarErrorCompresion(imagenes, imagenes_procesadas, titulo, metodo1="pca"
     plt.xlabel('Valores de k')
     plt.ylabel('Error')
     plt.savefig('resultados/ejercicio_3/item_c/' + titulo)
-    plt.show()
+    plt.clf()
+
+def graficarMetricasSimiliaridad(data, titulo):
+    df = pd.DataFrame(data).T
+
+    _, ax = plt.subplots()
+    df.plot(kind="bar", ax=ax)
+
+    plt.title(titulo)
+    plt.xlabel('Valores de k')
+    plt.ylabel('Valor metrica')
+    ax.legend(["Mismo", "Distinto"]);
+    plt.savefig('resultados/ejercicio_3/item_b/' + titulo)
+    plt.clf()
 
 def calcularErrorCompresion(imagenes, imagenes_pca):
     error = np.zeros(len(imagenes))

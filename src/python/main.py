@@ -112,7 +112,7 @@ def graficarAutovalores():
 
 def generarEigenFaces(imagenes, k):
     # PCA:
-    # plotter.graficarEigenFacesPCA("covarianza_eigenVectors.csv", 10)
+    plotter.graficarEigenFacesPCA("covarianza_eigenVectors.csv", 10)
     # 2DPCA
     features, autovectores = TDPCA(imagenes, k, False, "covarianza_2dpca_eigenVectors.csv", True)
     plotter.graficarEigenFacesTDPCA(features[0], autovectores, 10)
@@ -155,12 +155,13 @@ def calcularMetricas(M):
     divisor_distinto = (r * c) - divisor_mismo
 
     for i in range(r-1, -1, -1):
-        offset = contador * 10
-        for j in range(c):
-            if offset <= j < (offset + 10):
-                suma_mismo += M[i][j]
+        offset = c - contador * 10
+        for j in range(c-1, -1, -1):
+            coef = M[i][j]
+            if offset > j >= (offset - 10):
+                suma_mismo += coef
             else:
-                suma_distinto += M[i][j]
+                suma_distinto += coef
         if i % 10 == 0:
             contador += 1
 
@@ -179,6 +180,35 @@ def errorPcaVsTdpca(imagenes):
         imagenes_procesadas["tdpca"][k] = imagenes_tdpca
     plotter.graficarErrorCompresion(imagenes, imagenes_procesadas, "Error de compresión PCA vs 2DPCA")
 
+
+def visualizarCorrelacion(imagenes, generarMatrices=False):
+    if generarMatrices:
+        generarCorrelacion(imagenes, [50, 400], [5, 40])
+
+    filenames = ["correlacion", "correlacion_pca_50", "correlacion_pca_400", "correlacion_2dpca_5",
+                 "correlacion_2dpca_40"]
+    labels = ["Conjunto de datos original", "Datos procesados con PCA para k=50", "Datos procesados con PCA para k=400",
+              "Datos procesados con 2DPCA para k=5", "Datos procesados con 2DPCA para k=40"]
+
+    data = IO.leerMatricesCorrelacion(filenames)
+    for matriz, label, filename in zip(data, labels, filenames):
+        plotter.graficarCorrelacion(matriz, label, filename)
+
+
+def compararMetricas(imagenes, metodo, rango, generarMatrices=False):
+    if generarMatrices:
+        if (metodo == "pca"):
+            generarCorrelacion(imagenes, rango, [])
+        else:
+            generarCorrelacion(imagenes, [], rango)
+    filenames = ["correlacion_" + metodo + "_" + str(x) for x in rango]
+    matrices = IO.leerMatricesCorrelacion(filenames)
+    data = {}
+    for m, k in zip(matrices, rango):
+        mismo, distinto = calcularMetricas(m)
+        data[k] = [mismo, distinto]
+    plotter.graficarMetricasSimiliaridad(data, "Metricas " + metodo)
+
 def errorSetReducido(imagenes, metodo, ks):
     imagenes_procesadas = {"completo": {}, "reducido": {}}
     for k in ks:
@@ -196,8 +226,8 @@ if __name__ == '__main__':
     k_2dpca = config.k_2dpca
 
     # Ejecutar PCA y 2DPCA para luego utilizar resultados
-    # PCA(imagenes, k_pca, True)
-    # TDPCA(imagenes, k_2dpca, True)
+    PCA(imagenes, k_pca, True)
+    TDPCA(imagenes, k_2dpca, True)
 
     # -------- EXPERIMENTACION -------- #
     # Ejercicio 2
@@ -212,17 +242,11 @@ if __name__ == '__main__':
 
     # Ejercicio 3
     # a) Visualizar matriz de correlación
-    generarCorrelacion(imagenes, [50, 400], [5,40])
-    filenames = ["correlacion", "correlacion_pca_50", "correlacion_pca_400", "correlacion_2dpca_5", "correlacion_2dpca_40"]
-    data, labels = IO.leerMatricesCorrelacion(filenames)
-    for matriz, label, filename in zip(data, labels, filenames):
-        plotter.graficarCorrelacion(matriz, label, filename)
+    visualizarCorrelacion(imagenes, False)
 
     # b) Metricas de similaridad
-    generarCorrelacion(imagenes, list(range(10, 100, 10)), list(range(5, 45, 5)))
-    data, labels = data, labels = IO.leerMatricesCorrelacion(filenames)
-    mismo, distinto = calcularMetricas(data[0])
-    plotter.graficarMetricasSimiliaridad(data, labels)
+    compararMetricas(imagenes, "pca", [*range(50, 401, 50)], True)
+    compararMetricas(imagenes, "2dpca", [*range(5, 41, 5)], True)
 
     # c) Error de compresion
     errorPcaVsTdpca(imagenes)
