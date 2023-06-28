@@ -82,6 +82,24 @@ def graficarErrorCompresion(imagenes, imagenes_procesadas, titulo, metodo1="pca"
     plt.savefig('resultados/ejercicio_3/item_c/' + titulo)
     plt.clf()
 
+def graficarErrorEnRango(imagenes, imagenes_procesadas, metodo):
+    errores = {}
+    for k in imagenes_procesadas.keys():
+        errores[k] = calcularErrorCompresion(imagenes, imagenes_procesadas[k])
+
+    xticks = list(errores.keys())
+    _, ax = plt.subplots()
+    plt.scatter(xticks, list(errores.values()))
+
+    ax.set_xticks(xticks)
+    plt.xticks(rotation=90)
+    plt.title("Error de compresión " + metodo)
+    plt.xlabel('Cantidad de componentes')
+    plt.ylabel('Error')
+    plt.grid(alpha=0.5)
+    plt.savefig('resultados/ejercicio_3/item_c/rango_' + metodo)
+    plt.clf()
+
 def graficarMetricasSimiliaridad(data, titulo):
     df = pd.DataFrame(data).T
 
@@ -91,12 +109,29 @@ def graficarMetricasSimiliaridad(data, titulo):
     plt.title(titulo)
     plt.xlabel('Valores de k')
     plt.ylabel('Valor metrica')
-    ax.legend(["Mismo", "Distinto"]);
+    plt.grid(alpha=0.3)
+    ax.legend(["Mismo", "Distinto"])
     plt.savefig('resultados/ejercicio_3/item_b/' + titulo)
     plt.clf()
 
-def calcularErrorCompresion(imagenes, imagenes_pca):
+def calcularErrorCompresion(imagenes, imagenes_procesadas):
     error = np.zeros(len(imagenes))
     for i in range(len(imagenes)):
-        error[i] = np.linalg.norm(np.subtract(imagenes[i], imagenes_pca[i]), ord=2)
+        error[i] = np.linalg.norm(np.subtract(imagenes[i], imagenes_procesadas[i]), ord=2)
     return np.mean(error)
+
+
+def boxplotTiempos(data, rango, metodo="PCA"):
+    fig = plt.figure()
+    ax = fig.add_subplot()
+
+    ax.boxplot(data)
+    ax.set_title("Tiempo de ejecución de " + metodo)
+    ax.set_xlabel('Cantidad de componentes')
+    ax.set_ylabel('Tiempo (segundos)')
+
+    x = [*range(len(data) + 1)]
+    plt.xticks(x, [0] + rango)
+    plt.grid()
+    plt.savefig("resultados/ejercicio_4/tiempos_" + metodo)
+    plt.clf()

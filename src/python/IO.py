@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
@@ -8,6 +7,13 @@ def write(m, filename, path='matrices/'):
     with open(path + filename, 'wb') as f:
         for line in m:
             np.savetxt(f, line, fmt='%.6f')
+
+
+def writeTimes(data, filename):
+    with open(r'resultados/ejercicio_4/' + filename, 'w') as fp:
+        for time in data:
+            # write each item on a new line
+            fp.write("%.3f\n" % time)
 
 
 def cargarImagenes():

@@ -4,6 +4,7 @@ import ejecutar
 import IO
 import plotter
 import config
+import time
 
 def obtenerMatricesCovarianzayCorrelación(X, sufijo = ''):
     # centrar matriz
@@ -40,7 +41,7 @@ def PCA(imagenes, k, calcularCovarianza = False, autovectores="covarianza_eigenV
     X = utils.aplanarImagenes(imagenes)
     # Obtener componentes principales
     if calcularCovarianza:
-        C = obtenerMatricesCovarianzayCorrelación(X)
+        obtenerMatricesCovarianzayCorrelación(X)
         # Calcular autovalores y autovectores de matriz de covarianza
         print("Ejecutando Deflacion para Matriz de Covarianza")
         if omitirAutovectores:
@@ -119,7 +120,7 @@ def generarEigenFaces(imagenes, k):
 
 
 def regenerarRostros(imagenes):
-    folder = "resultados/ejericico_2/item_d/"
+    folder = "resultados/ejercicio_2/item_d/"
     # PCA
     for componentes in [10, 100, 200, 300, 400]:
         rostros_pca, _ = PCA(imagenes, componentes, False)
@@ -169,8 +170,8 @@ def calcularMetricas(M):
 
 
 def errorPcaVsTdpca(imagenes):
-    ks_pca = list(range(50, 400, 50))
-    ks_tdpca = list(range(5, 45, 5))
+    ks_pca = list(range(50, 401, 50))
+    ks_tdpca = list(range(5, 46, 5))
     imagenes_procesadas = {"pca": {}, "tdpca": {}}
     for k in ks_pca:
         imagenes_pca, z_pca = PCA(imagenes, k, False)
@@ -179,6 +180,20 @@ def errorPcaVsTdpca(imagenes):
         imagenes_tdpca, z_tdpca = TDPCA(imagenes, k, False)
         imagenes_procesadas["tdpca"][k] = imagenes_tdpca
     plotter.graficarErrorCompresion(imagenes, imagenes_procesadas, "Error de compresión PCA vs 2DPCA")
+
+def errorEnRango(imagenes, metodo, rango, calcularCovarianza=False):
+    imagenes_procesadas = {}
+    if metodo == "pca":
+        for k in rango:
+            print("resolviendo para k: " + str(k))
+            imagenes_pca, z_pca = PCA(imagenes, k, calcularCovarianza)
+            imagenes_procesadas[k] = imagenes_pca
+    else:
+        for k in rango:
+            print("resolviendo para k: " + str(k))
+            imagenes_tdpca, z_tdpca = TDPCA(imagenes, k, calcularCovarianza)
+            imagenes_procesadas[k] = imagenes_tdpca
+    plotter.graficarErrorEnRango(imagenes, imagenes_procesadas, metodo)
 
 
 def visualizarCorrelacion(imagenes, generarMatrices=False):
@@ -206,7 +221,7 @@ def compararMetricas(imagenes, metodo, rango, generarMatrices=False):
     data = {}
     for m, k in zip(matrices, rango):
         mismo, distinto = calcularMetricas(m)
-        data[k] = [mismo, distinto]
+        data[k] = [mismo, abs(distinto)]
     plotter.graficarMetricasSimiliaridad(data, "Metricas " + metodo)
 
 def errorSetReducido(imagenes, metodo, ks):
@@ -217,6 +232,45 @@ def errorSetReducido(imagenes, metodo, ks):
         imagenes_procesadas["completo"][k] = imagenes_completo
         imagenes_procesadas["reducido"][k] = imagenes_reducido
     plotter.graficarErrorCompresion(imagenes, imagenes_procesadas, metodo.__name__ + ": Error de compresión set reducido", "completo", "reducido")
+
+
+def medirTiemposPCA(rango):
+    for k in rango:
+        tiempos = []
+        for iter in range(0, 20):
+            start = time.time()
+            PCA(imagenes, k, True)
+            end = time.time()
+            tiempos.append(end-start)
+
+        IO.writeTimes(tiempos, "pca_" + str(k))
+
+
+def medirTiempos2dpca(ejecutar=False):
+    if ejecutar:
+        tiempos = []
+        for iter in range(0, 20):
+            start = time.time()
+            TDPCA(imagenes, 10, True)
+            end = time.time()
+            tiempos.append(end - start)
+        IO.writeTimes(tiempos, "2dpca")
+
+    data = [np.loadtxt("resultados/ejercicio_4/2dpca", delimiter=" ")]
+    plotter.boxplotTiempos(data, [56], "2DPCA")
+
+
+def tiempoSegunComponentesPCA(rango, ejecutar=False):
+    if ejecutar:
+        medirTiemposPCA(rango)
+
+    tiempos = {}
+    for k in rango:
+        filename = "pca_" + str(k)
+        tiempos[k] = np.loadtxt("resultados/ejercicio_4/" + filename, delimiter=" ")
+
+    data = [v for v in tiempos.values()]
+    plotter.boxplotTiempos(data, rango)
 
 
 if __name__ == '__main__':
@@ -242,13 +296,19 @@ if __name__ == '__main__':
 
     # Ejercicio 3
     # a) Visualizar matriz de correlación
-    visualizarCorrelacion(imagenes, False)
+    visualizarCorrelacion(imagenes, True)
 
     # b) Metricas de similaridad
-    compararMetricas(imagenes, "pca", [*range(50, 401, 50)], True)
-    compararMetricas(imagenes, "2dpca", [*range(5, 41, 5)], True)
+    compararMetricas(imagenes, "pca", [*range(50, 401, 50)], generarMatrices=False)
+    compararMetricas(imagenes, "2dpca", [*range(5, 41, 5)], generarMatrices=False)
 
     # c) Error de compresion
     errorPcaVsTdpca(imagenes)
-    errorSetReducido(imagenes, PCA, list(range(50, 400, 50)))
-    errorSetReducido(imagenes, TDPCA, list(range(5, 45, 5)))
+    errorSetReducido(imagenes, PCA, list(range(50, 401, 50)))
+    errorSetReducido(imagenes, TDPCA, list(range(5, 46, 5)))
+    errorEnRango(imagenes, "pca", [*range(50, 901, 50)])
+
+    # Ejercicio 4
+    # Medir tiempos
+    tiempoSegunComponentesPCA([*range(10, 51, 10)], ejecutar=True)
+    medirTiempos2dpca(ejecutar=True)
