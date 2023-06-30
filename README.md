@@ -12,6 +12,7 @@ Parámetros:
 - Tolerancia para convergencia del método de la potencia
 - Cantidad de Componentes *k* (opcional): Determina la cantidad de pares 
 autovalor/autovector que se calculan con deflación
+- Ejecutar tests (opcional): pasar true para ejecutar unicamente los tests definidos en el archivo Tests.cpp
 
 Ejecucion:
 
