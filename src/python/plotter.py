@@ -29,7 +29,22 @@ def graficarAutovalores(filename, metodo, cantidad):
     plt.ylabel('Autovalor')
     plt.grid(alpha=0.5)
     plt.savefig('resultados/ejercicio_2/item_b/grafico_autovalores_' + metodo)
-    plt.show()
+    plt.clf()
+
+
+def graficarAutovaloresCompleto(filename, cantidad):
+    autovalores = IO.leerMatriz("resultados/", filename)[0][:cantidad]
+    plt.plot(autovalores)
+    x_axis = [*range(0, cantidad + 1, 50)]
+    plt.xticks(x_axis)
+    plt.xticks(rotation=90)
+    plt.title('Autovalores ordenados de PCA')
+    plt.xlabel('Componente Principal')
+    plt.ylabel('Autovalor')
+    plt.grid(alpha=0.5)
+    plt.yscale("log")
+    plt.savefig('resultados/ejercicio_2/item_b/grafico_autovalores_completo_pca')
+    plt.clf()
 
 
 def graficarCorrelacion(matrix, label, filename):
@@ -121,7 +136,7 @@ def calcularErrorCompresion(imagenes, imagenes_procesadas):
     return np.mean(error)
 
 
-def boxplotTiempos(data, rango, metodo="PCA"):
+def boxplotTiempos(data, rango, metodo):
     fig = plt.figure()
     ax = fig.add_subplot()
 
