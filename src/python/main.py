@@ -273,8 +273,8 @@ if __name__ == '__main__':
     k_2dpca = config.k_2dpca
 
     # Ejecutar PCA y 2DPCA para luego utilizar resultados
-    #PCA(imagenes, 901, True)
-    #TDPCA(imagenes, k_2dpca, True)
+    PCA(imagenes, 901, True)
+    TDPCA(imagenes, k_2dpca, True)
 
     # -------- EXPERIMENTACION -------- #
     # Ejercicio 2
@@ -282,26 +282,26 @@ if __name__ == '__main__':
     graficarAutovalores()
 
     # c) Observar eigenfaces
-    #generarEigenFaces(imagenes, k_2dpca)
+    generarEigenFaces(imagenes, k_2dpca)
 
     # d) Regeneramos rostros de la primer persona, para distintos valores de k
-    #regenerarRostros(imagenes)
+    regenerarRostros(imagenes)
 
     # Ejercicio 3
     # a) Visualizar matriz de correlación
-    #visualizarCorrelacion(imagenes, True)
+    visualizarCorrelacion(imagenes, True)
 
     # b) Metricas de similaridad
-    #compararMetricas(imagenes, "pca", [*range(50, 401, 50)], generarMatrices=False)
-    #compararMetricas(imagenes, "2dpca", [*range(5, 41, 5)], generarMatrices=False)
+    compararMetricas(imagenes, "pca", [*range(50, 401, 50)], generarMatrices=True)
+    compararMetricas(imagenes, "2dpca", [*range(5, 41, 5)], generarMatrices=True)
 
     # c) Error de compresion
-    #errorPcaVsTdpca(imagenes)
-    #errorSetReducido(imagenes, PCA, list(range(50, 401, 50)))
-    #errorSetReducido(imagenes, TDPCA, list(range(5, 46, 5)))
-    #errorEnRango(imagenes, "pca", [*range(50, 901, 50)])
+    errorPcaVsTdpca(imagenes)
+    errorSetReducido(imagenes, PCA, list(range(50, 401, 50)))
+    errorSetReducido(imagenes, TDPCA, list(range(5, 46, 5)))
+    errorEnRango(imagenes, "pca", [*range(50, 901, 50)])
 
     # Ejercicio 4
     # Medir tiempos
-    #tiempoSegunComponentes("pca", [*range(10, 41, 10)], ejecutar=False)
-    #tiempoSegunComponentes("2dpca", [*range(10, 41, 10)], ejecutar=False)
+    tiempoSegunComponentes("pca", [*range(10, 41, 10)], ejecutar=False)
+    tiempoSegunComponentes("2dpca", [*range(10, 41, 10)], ejecutar=False)
