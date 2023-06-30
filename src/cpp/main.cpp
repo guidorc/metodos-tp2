@@ -2,6 +2,7 @@
 
 #include "Matrix.h"
 #include "IO.h"
+#include "Tests.h"
 
 using namespace MatrixOperator;
 using namespace IO;
@@ -26,6 +27,14 @@ int main(int argc, char *argv[]) {
   int k = M.rows();
   if (argc > 4) {
     k = atof(argv[4]);
+  }
+
+  if (argc > 5) {
+    string test = argv[5];
+    if (test == "true") {
+      runTests();
+      return 0;
+    }
   }
 
   // Calculo de autovalores y autovectores
